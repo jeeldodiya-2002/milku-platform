@@ -64,6 +64,10 @@ export const verifyDevice = () => api.get('/admin/verify-device');
 export const getImageUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http') || path.startsWith('blob:')) return path;
+  
+  // If it's a local media asset from the public folder, return as is
+  if (path.startsWith('/media/')) return path;
+  
   const baseUrl = getBaseURL().replace('/api', '');
   return encodeURI(`${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`);
 };
