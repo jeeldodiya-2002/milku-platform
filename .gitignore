@@ -1,5 +1,5 @@
 # Ignore raw media and temporary folders (frontend/public/media is pushed instead)
-media/
+/media/
 scratch/
 tmp_docx/
 *.zip
