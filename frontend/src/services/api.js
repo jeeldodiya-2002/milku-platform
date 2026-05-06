@@ -2,9 +2,15 @@ import axios from 'axios';
 
 // PRODUCTION-READY DYNAMIC BASE URL
 const getBaseURL = () => {
-   if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
-   // Fallback for local development
-   return `${window.location.protocol}//${window.location.hostname}:5000/api`;
+  if (import.meta.env.VITE_API_URL) return import.meta.env.VITE_API_URL;
+  
+  // If we are on the production domain, use the production API
+  if (window.location.hostname === 'milkudairy.com' || window.location.hostname === 'www.milkudairy.com') {
+    return 'https://milku-api.onrender.com/api';
+  }
+
+  // Fallback for local development
+  return 'http://localhost:5000/api';
 };
 
 const api = axios.create({
