@@ -186,6 +186,7 @@ const DairyProductCard = ({ product, index, onClick }) => {
           src={image}
           alt={name}
           crossOrigin="anonymous"
+          loading="lazy"
           className="relative z-10 w-full h-full object-contain grayscale-0 md:grayscale md:opacity-80 lg:group-hover:grayscale-0 lg:group-hover:opacity-100 lg:group-hover:scale-105 transition-all duration-700 ease-out"
         />
       </div>

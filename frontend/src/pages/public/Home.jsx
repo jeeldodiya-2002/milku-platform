@@ -320,6 +320,7 @@ const Home = ({ splashFinished }) => {
                                 <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent rounded-full blur-3xl opacity-50"></div>
                                 <img src={config.LEGACY_CONTENT.image} alt="Heritage Product"
                                     crossOrigin="anonymous"
+                                    loading="lazy"
                                     className="relative z-10 h-full w-auto object-contain drop-shadow-[0_30px_50px_rgba(0,0,0,0.5)] will-change-transform hover:scale-110 transition-transform duration-1000 ease-out" />
                             </div>
                         </div>
