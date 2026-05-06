@@ -135,21 +135,21 @@ export const MASTER_CONFIG = {
     {
       id: 6,
       title: "Low Fat Soft Paneer",
-      image: "/media/low fat soft paneer.png",
+      image: "/media/low_fat_soft_paneer.png",
       tag: "LIGHT",
       meta: "Low Fat • 200g, 500g, 1Kg"
     },
     {
       id: 7,
       title: "Low Fat Hard Paneer",
-      image: "/media/low fat hard paneer.png",
+      image: "/media/low_fat_hard_paneer.png",
       tag: "FITNESS",
       meta: "High Protein • 200g, 500g, 1Kg"
     },
     {
       id: 8,
       title: "Medium Fat Paneer",
-      image: "/media/medium fat paneer.png",
+      image: "/media/medium_fat_paneer.png",
       tag: "CLASSIC",
       meta: "Balanced Fat • 200g, 500g, 1Kg"
     }

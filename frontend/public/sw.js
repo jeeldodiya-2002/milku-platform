@@ -29,6 +29,9 @@ self.addEventListener('activate', event => {
 });
 
 self.addEventListener('fetch', event => {
+  // TEMPORARY BYPASS FOR PRODUCTION SYNC
+  return; 
+
   const url = new URL(event.request.url);
 
   // 1. BYPASS FOR ADMIN ROUTES: Never let SW touch administrative or internal paths
