@@ -1,0 +1,8 @@
+# Ignore raw media and temporary folders (frontend/public/media is pushed instead)
+media/
+scratch/
+tmp_docx/
+*.zip
+
+# Ignore Mac OS files
+.DS_Store

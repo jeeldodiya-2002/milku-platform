@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="en" style="position: relative; height: 100%;">
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/logo.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+  <!-- SEO & SEARCH VISIBILITY -->
+  <title>MILKU | JAY GAYATRI DAIRY</title>
+  <meta name="title" content="MILKU | JAY GAYATRI DAIRY" />
+  <meta name="description"
+    content="Milku offers 100% pure Paneer, Ghee, Chaas, and Dahi delivered fresh to your family in Surat. Experience traditional dairy quality with state-of-the-art 3D interactive shopping." />
+  <meta name="keywords"
+    content="Surat Dairy, Pure Paneer Surat, A2 Ghee Gujarat, Local Milk Delivery, Jay Gayatri Dairy, Fresh Buttermilk" />
+  <meta name="robots" content="index, follow" />
+
+  <!-- WHATSAPP PREVIEW & SOCIAL SHARE GRAPH -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://milku.in/" />
+  <meta property="og:title" content="MILKU | JAY GAYATRI DAIRY" />
+  <meta property="og:description" content="Pure Paneer, Ghee, and Dahi. 100% Organic Quality for your family." />
+  <meta property="og:image" content="/media/milku_logo/logo.png" />
+
+  <!-- TWITTER -->
+  <meta property="twitter:card" content="summary_large_image" />
+  <meta property="twitter:title" content="MILKU | JAY GAYATRI DAIRY" />
+  <meta property="twitter:description" content="Experience the purest dairy in Surat with our interactive 3D store." />
+
+  <!-- GOOGLE FONTS (Pre-cached) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@400;700;900&display=swap" rel="stylesheet">
+</head>
+
+<body style="position: relative; min-height: 100vh; margin: 0;">
+  <div id="root" class="relative" style="position: relative; min-height: 100vh;"></div>
+  <script type="module" src="/src/main.jsx"></script>
+
+  <!-- OFFLINE ENGINE REGISTRATION -->
+  <script>
+    if ('serviceWorker' in navigator) {
+      window.addEventListener('load', () => {
+        navigator.serviceWorker.register('/sw.js').then(reg => {
+          console.log('Milku Offline Engine Active!', reg.scope);
+        }).catch(err => {
+          console.warn('Offline Engine Failed:', err);
+        });
+      });
+    }
+  </script>
+</body>
+
+</html>
