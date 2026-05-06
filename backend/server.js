@@ -40,7 +40,7 @@ app.use(helmet({
 }));
 
 // 3. CORS CONFIGURATION
-const allowedOrigins = ['https://milkudairy.com', 'http://localhost:5173', 'http://127.0.0.1:5173'];
+const allowedOrigins = ['https://milkudairy.com', 'https://www.milkudairy.com', 'https://milku-dairy.vercel.app', 'http://localhost:5173', 'http://127.0.0.1:5173'];
 app.use(cors({
   origin: function (origin, callback) {
     // allow requests with no origin (like mobile apps or curl requests)
