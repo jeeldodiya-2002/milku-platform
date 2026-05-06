@@ -139,11 +139,17 @@ const ManageCustomers = () => {
   const confirmDelete = async () => {
     if (!deleteConfirm) return;
     try {
-      await deleteCustomer(deleteConfirm._id);
+      const res = await deleteCustomer(deleteConfirm._id);
+      if (res.data.success) {
+        setCustomers(customers.filter(c => c._id !== deleteConfirm._id));
+        setDeleteConfirm(null);
+      }
+    } catch (err) {
+      console.error("Delete failed:", err);
+      alert(err.response?.data?.message || "Failed to delete customer. The record might have been already removed.");
+      // Even if it failed with 404, we should remove it from the UI to keep it in sync
       setCustomers(customers.filter(c => c._id !== deleteConfirm._id));
       setDeleteConfirm(null);
-    } catch (err) {
-      alert("Failed to delete customer");
     }
   };
 

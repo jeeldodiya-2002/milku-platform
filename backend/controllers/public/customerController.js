@@ -62,12 +62,25 @@ const updateCustomer = async (req, res) => {
 // @route   DELETE /api/customers/:id
 const deleteCustomer = async (req, res) => {
     try {
-        const customer = await Customer.findByIdAndDelete(req.params.id);
-        if (!customer) return res.status(404).json({ success: false, message: 'Customer not found' });
+        const { id } = req.params;
+        
+        // Safety: Prevent empty or malformed ID deletions
+        if (!id || id.length < 12) {
+            return res.status(400).json({ success: false, message: 'Invalid Customer ID provided.' });
+        }
+
+        const customer = await Customer.findByIdAndDelete(id);
+        
+        if (!customer) {
+            // Check if it's already gone (success for the user)
+            return res.status(200).json({ success: true, message: 'Customer already removed or not found.' });
+        }
+
         await clearCustomerCache();
-        res.status(200).json({ success: true, message: 'Customer removed' });
+        res.status(200).json({ success: true, message: 'Customer removed successfully from registry.' });
     } catch (error) {
-        res.status(500).json({ success: false, message: error.message });
+        console.error(`[DELETE ERROR] Customer ID: ${req.params.id} | ${error.message}`);
+        res.status(500).json({ success: false, message: 'Database synchronization failed. Please try again.' });
     }
 };
 
