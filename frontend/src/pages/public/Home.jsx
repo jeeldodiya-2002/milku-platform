@@ -59,7 +59,7 @@ const InteractiveTicker = ({ items, speed = 1 }) => {
     return (
         <motion.div
             ref={containerRef}
-            className="flex gap-0 w-fit"
+            className="flex w-fit"
             style={{ x }}
             drag="x"
             onDragStart={() => setIsDragging(true)}
@@ -67,7 +67,7 @@ const InteractiveTicker = ({ items, speed = 1 }) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div ref={contentRef} className="flex gap-0">
+            <div ref={contentRef} className="flex gap-6 md:gap-10">
                 {['s1', 's2', 's3', 's4', 's5'].map(renderSet)}
             </div>
         </motion.div>
