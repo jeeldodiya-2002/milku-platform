@@ -66,15 +66,28 @@ export const deleteProduct = (id) => api.delete(`/products/${id}`);
 export const adminLogin = (pass) => api.post('/admin/login', { passphrase: pass });
 export const verifyDevice = () => api.get('/admin/verify-device');
 
-// Image Path Resolver
 export const getImageUrl = (path) => {
-  if (!path) return null;
-  if (path.startsWith('http') || path.startsWith('blob:')) return path;
+  if (!path || typeof path !== 'string') return '';
   
+  // 1. Handle Full URLs (Cloudinary/External)
+  if (path.startsWith('http') || path.startsWith('blob:')) {
+    return path;
+  }
+  
+  // 2. Normalize separators (Windows fixes)
   const normalizedPath = path.replace(/\\/g, '/');
   
+  // 3. Special handling for /media/ folder
+  // If it's a known media asset, we prefer the local (frontend) path 
+  // because it's safer for CORS and performance.
+  if (normalizedPath.startsWith('/media/')) {
+    return encodeURI(normalizedPath);
+  }
+  
+  // 4. Resolve other relative paths via Backend API
   const baseUrl = getBaseURL().replace('/api', '');
-  return encodeURI(`${baseUrl}${normalizedPath.startsWith('/') ? '' : '/'}${normalizedPath}`);
+  const cleanPath = normalizedPath.startsWith('/') ? normalizedPath : `/${normalizedPath}`;
+  return encodeURI(`${baseUrl}${cleanPath}`);
 };
 
 // Category API
