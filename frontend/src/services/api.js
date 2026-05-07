@@ -71,12 +71,10 @@ export const getImageUrl = (path) => {
   if (!path) return null;
   if (path.startsWith('http') || path.startsWith('blob:')) return path;
   
-  // If it's a local media asset from the public folder, we used to return it as is.
-  // However, in our hybrid architecture, dynamic uploads reside on the backend.
-  // Prepending the baseUrl ensures cross-origin assets are resolved correctly.
+  const normalizedPath = path.replace(/\\/g, '/');
   
   const baseUrl = getBaseURL().replace('/api', '');
-  return encodeURI(`${baseUrl}${path.startsWith('/') ? '' : '/'}${path}`);
+  return encodeURI(`${baseUrl}${normalizedPath.startsWith('/') ? '' : '/'}${normalizedPath}`);
 };
 
 // Category API
