@@ -587,7 +587,7 @@ const BulkOrder = ({ splashFinished }) => {
                             initial={{ opacity: 0, y: 50 }}
                             animate={{ opacity: 1, y: 0 }}
                             exit={{ opacity: 0, y: 50 }}
-                            className="lg:hidden fixed bottom-24 left-4 right-4 z-[999]"
+                            className="lg:hidden fixed bottom-40 left-4 right-4 z-[999]"
                         >
                             <button 
                                 onClick={() => {
