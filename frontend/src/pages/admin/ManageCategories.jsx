@@ -282,6 +282,7 @@ const ManageCategories = () => {
       }
       setWizardPreviews(existingImages);
       setWizardImages([]);
+      setShowValidationError(false); // Close the wizard list modal to show the editor
    };
 
    const handleAddWizardVariant = () => {
