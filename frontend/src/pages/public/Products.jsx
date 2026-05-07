@@ -11,21 +11,22 @@ const InteractiveCategoryTicker = ({ items, activeCategory, onCategoryClick, spe
   const [isDragging, setIsDragging] = useState(false);
 
   useAnimationFrame((t, delta) => {
-    if (!isHovered && !isDragging) {
+    if (!isDragging) {
       const currentX = x.get();
-      const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
+      const contentWidth = contentRef.current?.offsetWidth / 5 || 0;
       if (contentWidth > 0) {
-        let nextX = currentX - speed;
-        if (nextX <= -contentWidth) nextX += contentWidth;
+        let nextX = currentX - (isHovered ? 0 : speed);
+        if (nextX <= -contentWidth * 3) nextX += contentWidth;
+        if (nextX >= -contentWidth) nextX -= contentWidth;
         x.set(nextX);
       }
     }
   });
 
-  const renderItems = (setLabel) => (
-    <div key={setLabel} className="flex items-center shrink-0">
+  const renderSet = (id) => (
+    <div key={id} className="flex items-center shrink-0">
       {items.map((cat, idx) => (
-        <div key={`${setLabel}-${idx}`} className="flex items-center">
+        <div key={`${id}-${idx}`} className="flex items-center">
           <button
             onClick={() => onCategoryClick(cat.name.toLowerCase().replace(/[\s\/]+/g, '-'))}
             className={`ticker-item ${activeCategory === cat.name.toLowerCase().replace(/[\s\/]+/g, '-') ? 'active' : ''}`}
@@ -45,19 +46,13 @@ const InteractiveCategoryTicker = ({ items, activeCategory, onCategoryClick, spe
       style={{ x }}
       drag="x"
       onDragStart={() => setIsDragging(true)}
-      onDragEnd={() => {
-        setIsDragging(false);
-        const currentX = x.get();
-        const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
-        if (currentX > 0) x.set(currentX - contentWidth);
-        if (currentX <= -contentWidth * 2) x.set(currentX + contentWidth);
-      }}
+      onDragEnd={() => setIsDragging(false)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
-      <div ref={contentRef} className="flex">{renderItems('set1')}</div>
-      {renderItems('set2')}
-      {renderItems('set3')}
+      <div ref={contentRef} className="flex">
+        {['s1', 's2', 's3', 's4', 's5'].map(renderSet)}
+      </div>
     </motion.div>
   );
 };
@@ -71,46 +66,51 @@ const InteractiveProductTicker = ({ items, onProductClick, speed = 0.6 }) => {
   const [isDragging, setIsDragging] = useState(false);
 
   useAnimationFrame((t, delta) => {
-    if (!isHovered && !isDragging) {
+    if (!isDragging) {
       const currentX = x.get();
-      const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
+      const contentWidth = contentRef.current?.offsetWidth / 5 || 0;
       if (contentWidth > 0) {
-        let nextX = currentX - speed;
-        if (nextX <= -contentWidth) nextX += contentWidth;
+        let nextX = currentX - (isHovered ? 0 : speed);
+        if (nextX <= -contentWidth * 3) nextX += contentWidth;
+        if (nextX >= -contentWidth) nextX -= contentWidth;
         x.set(nextX);
       }
     }
   });
 
-  const renderProduct = (p, idx, setLabel) => {
-    const hasImage = !!p.frontImage;
-    const rImg = hasImage ? getImageUrl(p.frontImage) : null;
-    const rName = p.name || '';
-    const config = CATEGORY_UI_CONFIG[p.category] || { icon: Package, color: '#64748B' };
-    const Icon = config.icon;
+  const renderProductSet = (id) => (
+    <div key={id} className="flex shrink-0">
+      {items.map((p, i) => {
+        const hasImage = !!p.frontImage;
+        const rImg = hasImage ? getImageUrl(p.frontImage) : null;
+        const rName = p.name || '';
+        const config = CATEGORY_UI_CONFIG[p.category] || { icon: Package, color: '#64748B' };
+        const Icon = config.icon;
 
-    return (
-      <motion.div
-        key={`${setLabel}-${p._id}-${idx}`}
-        whileTap={{ scale: 0.96 }}
-        onClick={() => !isDragging && onProductClick(p)}
-        className="group/r shrink-0 w-36 cursor-pointer space-y-3 mr-6 transition-transform duration-300"
-      >
-        <div className="w-36 aspect-[4/3] rounded-[28px] bg-white flex flex-col items-center justify-center p-3 shadow-sm border border-slate-100 transition-all duration-700 overflow-hidden relative">
-          {hasImage ? (
-            <img src={rImg} alt={rName} crossOrigin="anonymous" className="relative z-10 w-full h-full object-contain" />
-          ) : (
-            <>
-              <div className="absolute inset-0 opacity-5" style={{ backgroundColor: config.color }} />
-              <Icon size={32} color={config.color} className="opacity-40 mb-2" />
-              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest text-center px-2">{p.category}</span>
-            </>
-          )}
-        </div>
-        <p className="text-[11px] md:text-xs font-black text-slate-600 capitalize tracking-tight text-center group-hover/r:text-milku-primary transition-colors duration-300 line-clamp-2 leading-tight px-1">{rName}</p>
-      </motion.div>
-    );
-  };
+        return (
+          <motion.div
+            key={`${id}-${p._id}-${i}`}
+            whileTap={{ scale: 0.96 }}
+            onClick={() => !isDragging && onProductClick(p)}
+            className="group/r shrink-0 w-36 cursor-pointer space-y-3 mr-6 transition-transform duration-300"
+          >
+            <div className="w-36 aspect-[4/3] rounded-[28px] bg-white flex flex-col items-center justify-center p-3 shadow-sm border border-slate-100 transition-all duration-700 overflow-hidden relative">
+              {hasImage ? (
+                <img src={rImg} alt={rName} crossOrigin="anonymous" className="relative z-10 w-full h-full object-contain" />
+              ) : (
+                <>
+                  <div className="absolute inset-0 opacity-5" style={{ backgroundColor: config.color }} />
+                  <Icon size={32} color={config.color} className="opacity-40 mb-2" />
+                  <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest text-center px-2">{p.category}</span>
+                </>
+              )}
+            </div>
+            <p className="text-[11px] md:text-xs font-black text-slate-600 capitalize tracking-tight text-center group-hover/r:text-milku-primary transition-colors duration-300 line-clamp-2 leading-tight px-1">{rName}</p>
+          </motion.div>
+        );
+      })}
+    </div>
+  );
 
   return (
     <motion.div
@@ -119,24 +119,12 @@ const InteractiveProductTicker = ({ items, onProductClick, speed = 0.6 }) => {
       style={{ x }}
       drag="x"
       onDragStart={() => setIsDragging(true)}
-      onDragEnd={() => {
-        setIsDragging(false);
-        const currentX = x.get();
-        const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
-        if (currentX > 0) x.set(currentX - contentWidth);
-        if (currentX <= -contentWidth * 2) x.set(currentX + contentWidth);
-      }}
+      onDragEnd={() => setIsDragging(false)}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
     >
       <div ref={contentRef} className="flex">
-        {items.map((p, i) => renderProduct(p, i, 'set1'))}
-      </div>
-      <div className="flex">
-        {items.map((p, i) => renderProduct(p, i, 'set2'))}
-      </div>
-      <div className="flex">
-        {items.map((p, i) => renderProduct(p, i, 'set3'))}
+        {['s1', 's2', 's3', 's4', 's5'].map(renderProductSet)}
       </div>
     </motion.div>
   );

@@ -26,50 +26,44 @@ const InteractiveTicker = ({ items, speed = 1 }) => {
     const [isDragging, setIsDragging] = useState(false);
 
     useAnimationFrame((t, delta) => {
-        if (!isHovered && !isDragging) {
+        if (!isDragging) {
             const currentX = x.get();
-            const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
+            const contentWidth = contentRef.current?.offsetWidth / 5 || 0;
             
             if (contentWidth > 0) {
-                let nextX = currentX - speed;
-                if (nextX <= -contentWidth) nextX += contentWidth;
+                // Auto-scroll logic
+                let nextX = currentX - (isHovered ? 0 : speed);
+                
+                // Real-time boundary wrapping (Infinite Loop)
+                if (nextX <= -contentWidth * 3) nextX += contentWidth;
+                if (nextX >= -contentWidth) nextX -= contentWidth;
+                
                 x.set(nextX);
             }
         }
     });
 
+    const renderSet = (id) => (
+        <div key={id} className="flex gap-6 md:gap-10 shrink-0">
+            {items.map((prod, i) => (
+                <ProductSlide key={`${id}-${prod._id || i}`} product={prod} index={i} />
+            ))}
+        </div>
+    );
+
     return (
         <motion.div
             ref={containerRef}
-            className="flex gap-6 md:gap-10 w-fit"
+            className="flex gap-0 w-fit"
             style={{ x }}
             drag="x"
             onDragStart={() => setIsDragging(true)}
-            onDragEnd={(e, info) => {
-                setIsDragging(false);
-                // Snap back logic if needed, but for ticker we just let it be
-                const currentX = x.get();
-                const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
-                if (currentX > 0) x.set(currentX - contentWidth);
-                if (currentX <= -contentWidth * 2) x.set(currentX + contentWidth);
-            }}
+            onDragEnd={() => setIsDragging(false)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div ref={contentRef} className="flex gap-6 md:gap-10 shrink-0">
-                {items.map((prod, i) => (
-                    <ProductSlide key={`set1-${prod._id || i}`} product={prod} index={i} />
-                ))}
-            </div>
-            <div className="flex gap-6 md:gap-10 shrink-0">
-                {items.map((prod, i) => (
-                    <ProductSlide key={`set2-${prod._id || i}`} product={prod} index={i} />
-                ))}
-            </div>
-            <div className="flex gap-6 md:gap-10 shrink-0">
-                {items.map((prod, i) => (
-                    <ProductSlide key={`set3-${prod._id || i}`} product={prod} index={i} />
-                ))}
+            <div ref={contentRef} className="flex gap-0">
+                {['s1', 's2', 's3', 's4', 's5'].map(renderSet)}
             </div>
         </motion.div>
     );

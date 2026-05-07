@@ -15,7 +15,7 @@ const getBaseURL = () => {
 
 const api = axios.create({
   baseURL: getBaseURL(),
-  timeout: 15000, // Increased for heavy 3D asset handshakes
+  timeout: 60000, // Extended to 60s to reliably handle Render cold-starts during initial load
   headers: {
     'Content-Type': 'application/json',
   },
