@@ -472,7 +472,7 @@ const ProductDetailModal = ({ item, category, isOpen, onClose, setSelectedItem, 
   const waText = `Hi Milku! I'm interested in *${name}* from the ${displayCategory} collection. Please share pricing and availability.`;
 
   // 1. Image Products (Main Products)
-  const relatedImageProducts = allProducts.filter(p => p.name !== name && p.frontImage).sort(() => Math.random() - 0.5);
+  const relatedImageProducts = allProducts.filter(p => p.name !== name && p.frontImage && p.isActive !== false).sort(() => Math.random() - 0.5);
 
   // 2. Other Categories
   const availableCategories = [...new Set(allProducts.filter(p => !p.frontImage).map(p => p.category))].filter(c => c !== displayCategory);
@@ -876,7 +876,7 @@ const Products = ({ splashFinished }) => {
                       return (
                         <div className="space-y-6">
                           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
-                            {products.filter(p => p.category.toLowerCase().replace(/[\s\/]+/g, '-') === activeCategory).map((p, i) => (
+                            {products.filter(p => p.category.toLowerCase().replace(/[\s\/]+/g, '-') === activeCategory && p.isActive !== false).map((p, i) => (
                               <DairyProductCard key={p._id} product={p} index={i} onClick={() => setSelectedItem(p)} />
                             ))}
                           </div>
@@ -892,7 +892,7 @@ const Products = ({ splashFinished }) => {
                           </div>
                           <div className="bg-white rounded-[24px] overflow-hidden border border-slate-100 shadow-lg">
                             <div className="grid grid-cols-1 sm:grid-cols-2 divide-x divide-y divide-slate-50">
-                              {products.filter(p => p.category.toLowerCase().replace(/[\s\/]+/g, '-') === activeCategory).map((p, idx) => (
+                              {products.filter(p => p.category.toLowerCase().replace(/[\s\/]+/g, '-') === activeCategory && p.isActive !== false).map((p, idx) => (
                                 <ProductListItem key={p._id} product={p} index={idx} />
                               ))}
                             </div>
