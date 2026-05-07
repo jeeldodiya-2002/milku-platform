@@ -85,7 +85,7 @@ const ReviewCard = ({ review }) => {
                             )}
                         </h4>
                         <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                            {review.googleEmail || review.location} • {date}
+                            {review.googleEmail} • {date}
                         </span>
                     </div>
                 </div>
@@ -280,10 +280,10 @@ const Reviews = ({ splashFinished }) => {
                             </div>
                             <div className="flex flex-col items-center">
                                 <span className="text-5xl font-black text-milku-secondary italic tracking-tighter">
-                                    {(stats?.averageRating || 4.8).toFixed(1)}<span className="text-2xl text-slate-400">/5</span>
+                                    {(stats?.averageRating || 0).toFixed(1)}<span className="text-2xl text-slate-400">/5</span>
                                 </span>
                                 <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">
-                                    ({stats?.totalCount || 127} Verified Reviews)
+                                    ({stats?.totalCount || 0} Verified Reviews)
                                 </span>
                             </div>
                         </div>
@@ -299,17 +299,17 @@ const Reviews = ({ splashFinished }) => {
                                 <div className="w-20 h-1.5 bg-milku-primary rounded-full" />
                             </div>
                             <div className="space-y-4">
-                                <RatingBar rating={5} count={stats?.star5 || 89} total={stats?.totalCount || 127} delay={0.1} />
-                                <RatingBar rating={4} count={stats?.star4 || 28} total={stats?.totalCount || 127} delay={0.2} />
-                                <RatingBar rating={3} count={stats?.star3 || 7} total={stats?.totalCount || 127} delay={0.3} />
-                                <RatingBar rating={2} count={stats?.star2 || 2} total={stats?.totalCount || 127} delay={0.4} />
-                                <RatingBar rating={1} count={stats?.star1 || 1} total={stats?.totalCount || 127} delay={0.5} />
+                                <RatingBar rating={5} count={stats?.star5 || 0} total={stats?.totalCount || 0} delay={0.1} />
+                                <RatingBar rating={4} count={stats?.star4 || 0} total={stats?.totalCount || 0} delay={0.2} />
+                                <RatingBar rating={3} count={stats?.star3 || 0} total={stats?.totalCount || 0} delay={0.3} />
+                                <RatingBar rating={2} count={stats?.star2 || 0} total={stats?.totalCount || 0} delay={0.4} />
+                                <RatingBar rating={1} count={stats?.star1 || 0} total={stats?.totalCount || 0} delay={0.5} />
                             </div>
                         </div>
 
                         <div className="flex flex-col items-center justify-center p-12 bg-slate-50/50 rounded-[60px] border border-white text-center gap-6">
                             <div className="text-8xl font-black text-milku-secondary italic tracking-tighter">
-                                {(stats?.averageRating || 4.8).toFixed(1)}<span className="text-4xl text-slate-300">/5</span>
+                                {(stats?.averageRating || 0).toFixed(1)}<span className="text-4xl text-slate-300">/5</span>
                             </div>
                             <div className="flex gap-1.5">
                                 {[1, 2, 3, 4, 5].map(s => (
@@ -317,7 +317,7 @@ const Reviews = ({ splashFinished }) => {
                                 ))}
                             </div>
                             <div className="space-y-1">
-                                <p className="text-sm font-black text-milku-secondary uppercase tracking-tight">Based on {stats?.totalCount || 127} verified reviews</p>
+                                <p className="text-sm font-black text-milku-secondary uppercase tracking-tight">Based on {stats?.totalCount || 0} verified reviews</p>
                                 <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Jay Gayatri Dairy Products</p>
                             </div>
                         </div>
@@ -514,8 +514,8 @@ const Reviews = ({ splashFinished }) => {
                                             </button>
 
                                             <p className="text-center text-[9px] font-bold text-slate-400 uppercase tracking-widest leading-loose">
-                                                * Required fields • Reviews are verified manually before publishing<br />
-                                                By submitting, you agree to show your name on our public wall.
+                                                * Required fields • Reviews are published instantly<br />
+                                                By submitting, you agree to show your name and email on our public wall.
                                             </p>
                                         </motion.div>
                                     )}
@@ -533,9 +533,9 @@ const Reviews = ({ splashFinished }) => {
                                             <div className="w-20 h-20 bg-green-500 text-white rounded-full flex items-center justify-center mb-6 shadow-xl">
                                                 <CheckCircle2 size={40} />
                                             </div>
-                                            <h4 className="text-2xl font-black text-milku-secondary uppercase italic">Submission Received</h4>
+                                            <h4 className="text-2xl font-black text-milku-secondary uppercase italic">Review Published!</h4>
                                             <p className="text-sm font-medium text-slate-500 mt-2">
-                                                Thank you! Our quality team is verifying your experience.<br />It will appear on our wall shortly.
+                                                Thank you! Your experience has been shared with the Milku family.<br />It is now visible on our public wall.
                                             </p>
                                         </motion.div>
                                     )}

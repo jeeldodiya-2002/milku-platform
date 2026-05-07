@@ -22,37 +22,23 @@ const ManageReviews = () => {
     const [actionLoading, setActionLoading] = useState(null);
     const [filter, setFilter] = useState('');
 
-    useEffect(() => {
-        fetchPending();
-    }, []);
-
-    const fetchPending = async () => {
+    const fetchReviews = async () => {
         try {
             setLoading(true);
-            const res = await adminGetPendingReviews();
+            const res = await adminGetPendingReviews(); // This endpoint now returns all reviews
             if (res.data.success) {
                 setReviews(res.data.data);
             }
         } catch (err) {
-            console.error("Failed to fetch pending reviews", err);
+            console.error("Failed to fetch reviews", err);
         } finally {
             setLoading(false);
         }
     };
 
-    const handleApprove = async (id) => {
-        try {
-            setActionLoading(id);
-            const res = await adminApproveReview(id);
-            if (res.data.success) {
-                setReviews(prev => prev.filter(r => r._id !== id));
-            }
-        } catch (err) {
-            alert("Failed to approve review");
-        } finally {
-            setActionLoading(null);
-        }
-    };
+    useEffect(() => {
+        fetchReviews();
+    }, []);
 
     const handleDelete = async (id) => {
         if (!window.confirm("Are you sure you want to permanently delete this review?")) return;
@@ -71,7 +57,8 @@ const ManageReviews = () => {
 
     const filteredReviews = reviews.filter(r => 
         r.reviewerName.toLowerCase().includes(filter.toLowerCase()) || 
-        r.reviewText.toLowerCase().includes(filter.toLowerCase())
+        r.reviewText.toLowerCase().includes(filter.toLowerCase()) ||
+        (r.googleEmail && r.googleEmail.toLowerCase().includes(filter.toLowerCase()))
     );
 
     return (
@@ -85,9 +72,9 @@ const ManageReviews = () => {
                             <Link to="/admin-milku-secure-9281/dashboard" className="w-10 h-10 rounded-full bg-white border border-slate-200 flex items-center justify-center text-slate-500 hover:bg-milku-primary hover:text-white transition-all shadow-sm">
                                 <ArrowLeft size={18} />
                             </Link>
-                            <h1 className="text-4xl font-black text-milku-secondary uppercase italic tracking-tighter">Review Moderation</h1>
+                            <h1 className="text-4xl font-black text-milku-secondary uppercase italic tracking-tighter">Review Management</h1>
                         </div>
-                        <p className="text-slate-500 font-bold italic ml-14">Approve or delete pending customer reviews</p>
+                        <p className="text-slate-500 font-bold italic ml-14">View and manage all customer feedback</p>
                     </div>
 
                     <div className="flex gap-4">
@@ -95,7 +82,7 @@ const ManageReviews = () => {
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                             <input 
                                 type="text"
-                                placeholder="Search reviews..."
+                                placeholder="Search by name, email or content..."
                                 value={filter}
                                 onChange={(e) => setFilter(e.target.value)}
                                 className="bg-white border border-slate-200 rounded-2xl h-12 pl-12 pr-6 text-sm font-bold text-slate-700 focus:border-milku-primary outline-none transition-all w-[300px]"
@@ -107,11 +94,11 @@ const ManageReviews = () => {
                 {/* Stats */}
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
                     <div className="bg-white p-6 rounded-3xl border border-slate-100 shadow-sm space-y-2">
-                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Pending Verification</span>
+                        <span className="text-[10px] font-black text-slate-400 uppercase tracking-widest">Total Public Reviews</span>
                         <div className="flex items-center justify-between">
                             <span className="text-4xl font-black text-milku-secondary italic tracking-tighter">{reviews.length}</span>
-                            <div className="w-12 h-12 rounded-2xl bg-amber-50 text-amber-500 flex items-center justify-center">
-                                <Clock size={24} />
+                            <div className="w-12 h-12 rounded-2xl bg-blue-50 text-milku-primary flex items-center justify-center">
+                                <MessageSquare size={24} />
                             </div>
                         </div>
                     </div>
@@ -121,7 +108,7 @@ const ManageReviews = () => {
                 {loading ? (
                     <div className="flex flex-col items-center justify-center py-40 gap-4">
                         <Loader2 className="animate-spin text-milku-primary" size={40} />
-                        <span className="text-sm font-black text-slate-400 uppercase tracking-widest italic">Loading pending reviews...</span>
+                        <span className="text-sm font-black text-slate-400 uppercase tracking-widest italic">Loading database reviews...</span>
                     </div>
                 ) : filteredReviews.length === 0 ? (
                     <div className="bg-white rounded-[40px] border border-slate-100 border-dashed py-32 flex flex-col items-center justify-center text-center gap-6 shadow-sm">
@@ -129,8 +116,8 @@ const ManageReviews = () => {
                             <MessageSquare size={40} />
                         </div>
                         <div className="space-y-1">
-                            <h3 className="text-xl font-black text-milku-secondary uppercase italic">Clean Slate!</h3>
-                            <p className="text-sm font-bold text-slate-400 uppercase tracking-tight">No pending reviews require your attention.</p>
+                            <h3 className="text-xl font-black text-milku-secondary uppercase italic">No Reviews Found</h3>
+                            <p className="text-sm font-bold text-slate-400 uppercase tracking-tight">Try adjusting your search or check back later.</p>
                         </div>
                     </div>
                 ) : (
@@ -187,18 +174,11 @@ const ManageReviews = () => {
                                         <button 
                                             disabled={actionLoading === review._id}
                                             onClick={() => handleDelete(review._id)}
-                                            className="flex-grow md:flex-none h-14 w-14 rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all flex items-center justify-center shadow-sm"
-                                        >
-                                            <Trash2 size={20} />
-                                        </button>
-                                        <button 
-                                            disabled={actionLoading === review._id}
-                                            onClick={() => handleApprove(review._id)}
-                                            className="flex-grow md:flex-none h-14 px-8 rounded-2xl bg-green-500 text-white hover:bg-milku-secondary transition-all font-black text-xs uppercase tracking-[2px] flex items-center justify-center gap-3 shadow-xl shadow-green-900/10"
+                                            className="h-14 px-8 rounded-2xl bg-red-50 text-red-500 hover:bg-red-500 hover:text-white transition-all font-black text-xs uppercase tracking-[2px] flex items-center justify-center gap-3 shadow-sm flex-grow md:flex-none"
                                         >
                                             {actionLoading === review._id ? <Loader2 className="animate-spin" /> : (
                                                 <>
-                                                    <CheckCircle2 size={18} /> Approve Review
+                                                    <Trash2 size={18} /> Delete Review
                                                 </>
                                             )}
                                         </button>

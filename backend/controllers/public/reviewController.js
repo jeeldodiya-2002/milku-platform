@@ -3,7 +3,7 @@ const { OAuth2Client } = require('google-auth-library');
 const client = new OAuth2Client(process.env.GOOGLE_CLIENT_ID);
 
 /**
- * @desc    Get all approved reviews with pagination and stats
+ * @desc    Get all reviews with pagination and stats
  * @route   GET /api/reviews
  * @access  Public
  */
@@ -13,17 +13,16 @@ exports.getReviews = async (req, res) => {
         const limit = parseInt(req.query.limit) || 6;
         const skip = (page - 1) * limit;
 
-        // Fetch approved reviews
-        const reviews = await Review.find({ approved: true })
+        // Fetch reviews
+        const reviews = await Review.find()
             .sort({ submittedAt: -1 })
             .skip(skip)
             .limit(limit);
 
-        const totalApproved = await Review.countDocuments({ approved: true });
+        const totalReviews = await Review.countDocuments();
 
         // Calculate Stats
         const stats = await Review.aggregate([
-            { $match: { approved: true } },
             {
                 $group: {
                     _id: null,
@@ -38,19 +37,9 @@ exports.getReviews = async (req, res) => {
             }
         ]);
 
-        // Mask emails in response
-        const maskedReviews = reviews.map(review => {
-            const r = review.toObject();
-            if (r.googleEmail) {
-                const [user, domain] = r.googleEmail.split('@');
-                r.googleEmail = user.substring(0, 3) + '***@' + domain;
-            }
-            return r;
-        });
-
         res.status(200).json({
             success: true,
-            data: maskedReviews,
+            data: reviews,
             stats: stats[0] || {
                 averageRating: 0,
                 totalCount: 0,
@@ -61,9 +50,9 @@ exports.getReviews = async (req, res) => {
                 star1: 0
             },
             pagination: {
-                total: totalApproved,
+                total: totalReviews,
                 page,
-                pages: Math.ceil(totalApproved / limit)
+                pages: Math.ceil(totalReviews / limit)
             }
         });
     } catch (err) {
@@ -98,7 +87,6 @@ exports.submitReview = async (req, res) => {
 
         const { sub: googleId, email: googleEmail, name: googleName, picture: googleAvatar } = payload;
 
-        // Spam Prevention: Rate limit check (already handled by middleware but we can add logic here)
         // Check for duplicate: same googleId + same product within last 30 days
         const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const existingReview = await Review.findOne({
@@ -126,13 +114,13 @@ exports.submitReview = async (req, res) => {
             googleEmail,
             googleName,
             googleAvatar,
-            verified: true, // Google verified
-            approved: false // Needs admin approval
+            verified: true,
+            approved: true // Set to true by default as requested
         });
 
         res.status(201).json({
             success: true,
-            message: 'Thank you! Your review has been submitted and is awaiting verification.',
+            message: 'Thank you! Your review has been published successfully.',
             data: newReview
         });
 
@@ -142,13 +130,14 @@ exports.submitReview = async (req, res) => {
 };
 
 /**
- * @desc    Get all pending reviews
+ * @desc    Get all reviews for management
  * @route   GET /api/admin/reviews/pending
  * @access  Private (Admin)
  */
 exports.adminGetPending = async (req, res) => {
     try {
-        const reviews = await Review.find({ approved: false }).sort({ submittedAt: -1 });
+        // Fetch all reviews for admin moderation/deletion
+        const reviews = await Review.find().sort({ submittedAt: -1 });
         res.status(200).json({ success: true, data: reviews });
     } catch (err) {
         res.status(500).json({ success: false, message: err.message });
