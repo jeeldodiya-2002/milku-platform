@@ -70,6 +70,8 @@ const ManageCategories = () => {
    const [wizardDesc, setWizardDesc] = useState('');
    const [wizardUnit, setWizardUnit] = useState('gm');
    const [wizardWeight, setWizardWeight] = useState('100');
+   const [wizardName, setWizardName] = useState('');
+   const [convertingCategory, setConvertingCategory] = useState(null);
 
    useEffect(() => {
       if (!authLoading && !isAdmin) navigate(`${ADMIN_PATH}/login`);
@@ -202,7 +204,8 @@ const ManageCategories = () => {
          if (!validation.success) {
             setValidationData(validation);
             setShowValidationError(true);
-            setEditingCategory(null);
+            setConvertingCategory(editingCategory); // Track which category we're converting
+            setEditingCategory(null); // Close the edit modal
             return;
          }
       }
@@ -267,6 +270,7 @@ const ManageCategories = () => {
 
    const startWizardEdit = (p) => {
       setWizardProduct(p);
+      setWizardName(p.name || '');
       setWizardVariants(p.availableSizes || []);
       setWizardDesc(p.shortDescription || '');
       setWizardRemovedImages([]);
@@ -318,6 +322,7 @@ const ManageCategories = () => {
       setActionLoading(true);
       try {
          const data = new FormData();
+         data.append('name', wizardName);
          data.append('shortDescription', wizardDesc);
          data.append('availableSizes', JSON.stringify(wizardVariants));
          if (wizardRemovedImages.length > 0) {
@@ -330,10 +335,12 @@ const ManageCategories = () => {
             const updatedProducts = allProducts.map(p => p._id === wizardProduct._id ? res.data.data : p);
             setAllProducts(updatedProducts);
 
-            const currentCatName = editingCategory ? editingCategory.name : (selectedCategory ? selectedCategory.name : (pendingCategory ? pendingCategory.name : null));
-            if (currentCatName) {
-               const v = validateCategoryForMain(currentCatName, updatedProducts);
+            // Re-validate category to see if more products need work
+            const catToValidate = convertingCategory || categories.find(c => c.name === wizardProduct.category);
+            if (catToValidate) {
+               const v = validateCategoryForMain(catToValidate.name, updatedProducts);
                setValidationData(v);
+               setShowValidationError(true); // Always show validation list after saving
             }
 
             setWizardProduct(null);
@@ -355,6 +362,7 @@ const ManageCategories = () => {
          if (!validation.success) {
             setValidationData(validation);
             setShowValidationError(true);
+            setConvertingCategory(cat || editingCategory);
             setEditingCategory(null);
             return;
          }
@@ -526,9 +534,12 @@ const ManageCategories = () => {
                               <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
                                  <div className="space-y-3">
                                     <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Product Name</label>
-                                    <div className="w-full bg-[#F8FAFC] border border-slate-50 rounded-2xl py-5 px-8 text-sm font-black text-[#0D1B3E]">
-                                       {wizardProduct.name}
-                                    </div>
+                                    <input
+                                       type="text"
+                                       value={wizardName}
+                                       onChange={e => setWizardName(e.target.value)}
+                                       className="w-full bg-[#F8FAFC] border border-slate-50 rounded-2xl py-5 px-8 text-sm font-black text-[#0D1B3E] outline-none focus:border-[#1565C0] transition-all"
+                                    />
                                  </div>
                                  <div className="space-y-3">
                                     <label className="text-[10px] font-black text-slate-600 uppercase tracking-widest ml-4">Category</label>
@@ -1207,11 +1218,10 @@ const ManageCategories = () => {
                               <button
                                  onClick={() => {
                                     setShowValidationError(false);
-                                    if (editingCategory) {
-                                       setCatEditForm({ ...catEditForm, isMain: true });
-                                       handleUpdateCategory({ preventDefault: () => { } });
-                                    } else if (pendingCategory) {
-                                       performCategoryToggle(pendingCategory);
+                                    if (convertingCategory) {
+                                       setCatEditForm({ name: convertingCategory.name, isMain: true });
+                                       // Directly call updateCategory logic or use helper
+                                       performCategoryToggle(convertingCategory);
                                     }
                                  }}
                                  className="w-full bg-green-500 text-white font-black py-4 rounded-2xl shadow-xl shadow-green-500/20 uppercase tracking-widest text-[10px] hover:bg-green-600 transition-all flex items-center justify-center gap-3"
