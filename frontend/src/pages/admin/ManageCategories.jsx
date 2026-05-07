@@ -202,6 +202,7 @@ const ManageCategories = () => {
          if (!validation.success) {
             setValidationData(validation);
             setShowValidationError(true);
+            setEditingCategory(null);
             return;
          }
       }
@@ -282,7 +283,8 @@ const ManageCategories = () => {
       }
       setWizardPreviews(existingImages);
       setWizardImages([]);
-      setShowValidationError(false); // Close the wizard list modal to show the editor
+      setShowValidationError(false); 
+      setEditingCategory(null); // Ensure edit modal is closed
    };
 
    const handleAddWizardVariant = () => {
@@ -353,6 +355,7 @@ const ManageCategories = () => {
          if (!validation.success) {
             setValidationData(validation);
             setShowValidationError(true);
+            setEditingCategory(null);
             return;
          }
 
@@ -385,6 +388,14 @@ const ManageCategories = () => {
       }
    };
 
+   const isHighFidelityMode = () => {
+      if (selectedCategory?.isMain) return true;
+      if (editingCategory?.isMain || catEditForm.isMain) return true;
+      if (pendingCategory) return true;
+      if (showValidationError) return true;
+      return false;
+   };
+
    return (
       <div className="min-h-screen bg-slate-50/50 font-sans pb-20 relative">
          <AdminBackground />
@@ -413,12 +424,12 @@ const ManageCategories = () => {
                            <div>
                               <div className="flex items-center gap-3">
                                  <h1 className="text-3xl font-black text-[#0D1B3E] tracking-tighter uppercase italic leading-none">Product Wizard Editor</h1>
-                                 <div className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${selectedCategory?.isMain ? 'bg-blue-50 text-[#1565C0] border border-blue-100' : 'bg-slate-50 text-slate-400 border border-slate-200'}`}>
-                                    {selectedCategory?.isMain ? 'High-Fidelity Mode' : 'Standard Mode'}
+                                 <div className={`px-3 py-1 rounded-lg text-[9px] font-black uppercase tracking-widest ${isHighFidelityMode() ? 'bg-blue-50 text-[#1565C0] border border-blue-100' : 'bg-slate-50 text-slate-400 border border-slate-200'}`}>
+                                    {isHighFidelityMode() ? 'High-Fidelity Mode' : 'Standard Mode'}
                                  </div>
                               </div>
                               <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mt-2">
-                                 {selectedCategory?.isMain ? 'Manage Premium Card View Requirements' : 'Update Basic Product Details'}
+                                 {isHighFidelityMode() ? 'Manage Premium Card View Requirements' : 'Update Basic Product Details'}
                               </p>
                            </div>
                         </div>
@@ -443,7 +454,7 @@ const ManageCategories = () => {
 
                         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 text-left">
                            {/* LEFT COLUMN: GALLERY - ONLY FOR MAIN CATEGORIES */}
-                           {selectedCategory?.isMain && (
+                           {isHighFidelityMode() && (
                               <div className="lg:col-span-4 space-y-6">
                                  <div className="flex items-center gap-3 text-[#1565C0]">
                                     <Palette size={16} strokeWidth={2.5} />
@@ -506,7 +517,7 @@ const ManageCategories = () => {
                            )}
 
                            {/* MIDDLE COLUMN: PRODUCT INFO */}
-                           <div className={`${selectedCategory?.isMain ? 'lg:col-span-8 border-l' : 'lg:col-span-12'} space-y-8 border-slate-50 pl-0 lg:pl-8`}>
+                           <div className={`${isHighFidelityMode() ? 'lg:col-span-8 border-l' : 'lg:col-span-12'} space-y-8 border-slate-50 pl-0 lg:pl-8`}>
                               <div className="flex items-center gap-3 text-[#1565C0]">
                                  <FileText size={16} strokeWidth={2.5} />
                                  <h3 className="text-[9px] font-black uppercase tracking-widest text-[#0D1B3E]">Product Identity</h3>
@@ -537,7 +548,7 @@ const ManageCategories = () => {
                               </div>
 
                               {/* VARIANTS SECTION */}
-                              {selectedCategory?.isMain && (
+                              {isHighFidelityMode() && (
                                  <div className="space-y-8 pt-8 border-t border-slate-50">
                                     <div className="flex items-center gap-4 text-[#1565C0]">
                                        <Layers size={20} strokeWidth={2.5} />
