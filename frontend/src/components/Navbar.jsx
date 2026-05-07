@@ -146,7 +146,7 @@ const Navbar = () => {
                                     <div key={i} className="flex flex-col">
                                         {link.dropdown ? (
                                             <>
-                                                <div className="text-[1.8rem] font-black uppercase tracking-tighter py-3 text-milku-primary/40">
+                                                <div className="text-[1.3rem] font-black uppercase tracking-tighter py-2 text-milku-primary/40">
                                                     {link.name}
                                                 </div>
                                                 <div className="pl-6 flex flex-col gap-1 border-l-2 border-slate-50">
@@ -156,7 +156,7 @@ const Navbar = () => {
                                                             to={sub.path}
                                                             onClick={() => setMobileOpen(false)}
                                                             className={({ isActive }) =>
-                                                                `text-[1.4rem] font-black uppercase tracking-tighter py-2 transition-colors ${isActive ? 'text-milku-primary' : 'text-milku-secondary hover:text-milku-primary'}`
+                                                                `text-[1.1rem] font-black uppercase tracking-tighter py-1.5 transition-colors ${isActive ? 'text-milku-primary' : 'text-milku-secondary hover:text-milku-primary'}`
                                                             }
                                                         >
                                                             {sub.name}
@@ -169,7 +169,7 @@ const Navbar = () => {
                                                 to={link.path}
                                                 onClick={() => setMobileOpen(false)}
                                                 className={({ isActive }) =>
-                                                    `text-[2.2rem] font-black uppercase tracking-tighter py-3 border-b border-slate-50 transition-colors ${isActive ? 'text-milku-primary' : 'text-milku-secondary hover:text-milku-primary'}`
+                                                    `text-[1.8rem] font-black uppercase tracking-tighter py-2 border-b border-slate-50 transition-colors ${isActive ? 'text-milku-primary' : 'text-milku-secondary hover:text-milku-primary'}`
                                                 }
                                             >
                                                 {link.name}
