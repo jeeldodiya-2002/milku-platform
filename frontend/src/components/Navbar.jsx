@@ -47,13 +47,13 @@ const Navbar = () => {
 
     return (
         <>
-            <nav className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-300 ${scrolled ? 'py-1' : 'py-2'}`}>
+            <nav className={`fixed top-0 left-0 w-full z-[1000] transition-all duration-300 ${scrolled ? 'py-0.5' : 'py-1.5 md:py-2'}`}>
                 <div className="max-w-[1500px] mx-auto px-3 md:px-8">
-                    <div className={`flex items-center justify-between px-4 md:px-6 py-2.5 rounded-2xl bg-white/97 backdrop-blur-xl border border-slate-100 transition-shadow duration-300 ${scrolled ? 'shadow-lg' : 'shadow-sm'}`}>
+                    <div className={`flex items-center justify-between px-3 md:px-6 py-2 md:py-2.5 rounded-2xl bg-white/97 backdrop-blur-xl border border-slate-100 transition-shadow duration-300 ${scrolled ? 'shadow-lg' : 'shadow-sm'}`}>
 
                         {/* LOGO + BRAND */}
-                        <NavLink to="/" className="flex items-center gap-2.5 group flex-shrink-0">
-                            <img src="/logo.jpeg" alt="Milku" className="h-9 md:h-11 w-auto flex-shrink-0 mix-blend-multiply rounded-md" />
+                        <NavLink to="/" className="flex items-center gap-2 group flex-shrink-0">
+                            <img src="/logo.jpeg" alt="Milku" className="h-8 md:h-11 w-auto flex-shrink-0 mix-blend-multiply rounded-md" />
                             <div className="flex flex-col leading-none">
                                 <span className="text-[18px] md:text-[20px] font-black uppercase tracking-tighter text-milku-secondary">MILKU</span>
                                 <span className="text-[8px] font-black uppercase tracking-[2.5px] text-milku-primary mt-0.5">Jay Gayatri Dairy</span>

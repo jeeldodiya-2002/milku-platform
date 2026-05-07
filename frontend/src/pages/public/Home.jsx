@@ -334,12 +334,12 @@ const Home = ({ splashFinished }) => {
                 {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
                 SECTION 3 — SIGNATURE PRODUCT GRID
             ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
-                <ScrollReveal className="py-6 md:py-10 px-4 md:px-6 lg:px-20">
+                <ScrollReveal className="py-12 md:py-10 px-4 md:px-6 lg:px-20">
                     <div className="max-w-[1500px] mx-auto space-y-8 md:space-y-12">
                         <div className="flex flex-col lg:flex-row justify-between items-center lg:items-end gap-4 md:gap-6">
                             <div className="space-y-2 md:space-y-3 text-center lg:text-left">
                                 <span className="text-[9px] font-black text-milku-primary uppercase tracking-[8px]">COLLECTION 2025</span>
-                                <h2 className="text-[clamp(2rem,8vw,5.5rem)] font-black text-milku-secondary leading-none uppercase tracking-tighter italic">
+                                <h2 className="text-[clamp(1.6rem,7vw,5.5rem)] font-black text-milku-secondary leading-none uppercase tracking-tighter italic">
                                     Signature<br />Selection.
                                 </h2>
                             </div>
