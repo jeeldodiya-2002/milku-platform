@@ -1,7 +1,7 @@
 import React, { useRef, useState, useEffect } from 'react';
 import { motion, useScroll, useTransform, useMotionValue, useAnimationFrame } from 'framer-motion';
 import { MASTER_CONFIG } from '../../masterConfig';
-import { ArrowRight, MessageCircle, Star, Zap, ShieldCheck, Award, Leaf } from 'lucide-react';
+import { ArrowRight, MessageCircle, Star, Zap, ShieldCheck, Award, Leaf, User, Quote } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
 import { NavLink, useNavigate } from 'react-router-dom';
 import CinematicEnvironment from '../../components/CinematicEnvironment';
@@ -14,6 +14,7 @@ import { TextReveal, ScrollReveal } from '../../components/RevealComponents';
 import SEO from '../../components/SEO';
 import { trackWhatsAppClick, trackContactClick } from '../../utils/analytics';
 import { getProducts, getImageUrl } from '../../services/api';
+import axios from 'axios';
 
 gsap.registerPlugin(ScrollTrigger);
 
@@ -31,13 +32,9 @@ const InteractiveTicker = ({ items, speed = 1 }) => {
             const contentWidth = contentRef.current?.offsetWidth / 5 || 0;
             
             if (contentWidth > 0) {
-                // Auto-scroll logic
                 let nextX = currentX - (isHovered ? 0 : speed);
-                
-                // Real-time boundary wrapping (Infinite Loop) with Jitter Guard
                 if (nextX <= -contentWidth * 3) nextX += contentWidth;
                 if (nextX >= -contentWidth) nextX -= contentWidth;
-                
                 x.set(nextX);
             }
         }
@@ -73,6 +70,69 @@ const InteractiveTicker = ({ items, speed = 1 }) => {
         </motion.div>
     );
 };
+
+// ─── REVIEW TICKER ───────────────────────────────────────────────────────────
+const ReviewTicker = ({ items, speed = 0.6 }) => {
+    const x = useMotionValue(0);
+    const contentRef = useRef(null);
+    const [isHovered, setIsHovered] = useState(false);
+
+    useAnimationFrame(() => {
+        const currentX = x.get();
+        const contentWidth = contentRef.current?.offsetWidth / 5 || 0;
+        if (contentWidth > 0) {
+            let nextX = currentX - (isHovered ? 0 : speed);
+            if (nextX <= -contentWidth * 3) nextX += contentWidth;
+            if (nextX >= -contentWidth) nextX -= contentWidth;
+            x.set(nextX);
+        }
+    });
+
+    const renderSet = (id) => (
+        <div key={id} className="flex gap-6 shrink-0">
+            {items.map((review, i) => (
+                <ReviewSlide key={`${id}-${review._id || i}`} review={review} />
+            ))}
+        </div>
+    );
+
+    return (
+        <motion.div
+            className="flex w-fit"
+            style={{ x }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div ref={contentRef} className="flex gap-6">
+                {['s1', 's2', 's3', 's4', 's5'].map(renderSet)}
+            </div>
+        </motion.div>
+    );
+};
+
+const ReviewSlide = ({ review }) => (
+    <div className="bg-white/10 backdrop-blur-xl border border-white/10 p-8 rounded-[40px] min-w-[320px] md:min-w-[400px] space-y-4 shadow-2xl">
+        <div className="flex items-center justify-between">
+            <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-xl bg-white/10 flex items-center justify-center text-white border border-white/10">
+                    <User size={20} />
+                </div>
+                <div>
+                    <h4 className="text-sm font-black text-white uppercase italic">{review.reviewerName}</h4>
+                    <div className="flex gap-0.5">
+                        {[1, 2, 3, 4, 5].map(s => (
+                            <Star key={s} size={10} className={s <= review.rating ? "fill-amber-400 text-amber-400" : "text-white/10"} />
+                        ))}
+                    </div>
+                </div>
+            </div>
+            <Quote size={32} className="text-white/5" />
+        </div>
+        <p className="text-sm font-medium text-white/70 leading-relaxed italic line-clamp-3">
+            "{review.reviewText}"
+        </p>
+    </div>
+);
 
 // ─── TRUST BADGE ──────────────────────────────────────────────────────────────
 const TrustBadge = ({ icon: Icon, label }) => (
@@ -175,14 +235,24 @@ const Home = ({ splashFinished }) => {
     
     const [products, setProducts] = useState([]);
     const [mainProducts, setMainProducts] = useState([]);
+    const [topReviews, setTopReviews] = useState([]);
 
     useEffect(() => {
         const fetchHomeData = async () => {
             try {
-                const res = await getProducts();
-                if (res.data.success) {
-                    const allProds = res.data.data.filter(p => p.isActive !== false);
+                const [prodRes, revRes] = await Promise.all([
+                    getProducts(),
+                    axios.get(`${import.meta.env.VITE_API_URL}/reviews?limit=20`)
+                ]);
+
+                if (prodRes.data.success) {
+                    const allProds = prodRes.data.data.filter(p => p.isActive !== false);
                     setProducts(allProds);
+                }
+
+                if (revRes.data.success) {
+                    const filtered = revRes.data.data.filter(r => r.rating >= 4);
+                    setTopReviews(filtered);
                 }
             } catch (err) {
                 console.error("Home Data Fetch Failed:", err);
@@ -206,7 +276,7 @@ const Home = ({ splashFinished }) => {
     const dynamicBackground = useTransform(
         scrollYProgress,
         [0, 0.25, 0.5, 0.75, 1],
-        ["#ffffff", "#BFDBFE", "#A7F3D0", "#1A237E", "#1A237E"] // Seamlessly fade into Navy for the footer
+        ["#ffffff", "#BFDBFE", "#A7F3D0", "#1A237E", "#1A237E"]
     );
 
     return (
@@ -220,16 +290,10 @@ const Home = ({ splashFinished }) => {
             <PageReveal splashFinished={splashFinished}>
                 <CinematicEnvironment chapter={0} />
 
-                {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                SECTION 1 — HERO
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+                {/* SECTION 1 — HERO */}
                 <section className="relative flex items-center px-5 lg:px-20 pt-[120px] md:pt-[140px] pb-6 md:pb-8 min-h-[65vh] md:min-h-fit overflow-hidden">
-                    {/* Hardware-accelerated radial glow instead of expensive CSS blur */}
                     <div className="absolute top-[-10%] right-[-5%] w-[500px] h-[500px] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,150,214,0.06)_0%,transparent_70%)] pointer-events-none" />
-
                     <div className="max-w-[1500px] mx-auto w-full grid lg:grid-cols-2 gap-8 lg:gap-12 items-center">
-
-                        {/* MOBILE BRAND LOGO */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.9 }} animate={splashFinished ? { opacity: 1, scale: 1 } : {}}
                             transition={{ delay: 0.2, duration: 1 }}
@@ -237,35 +301,27 @@ const Home = ({ splashFinished }) => {
                         >
                             <img src="/logo.jpeg" alt="Milku" className="h-28 w-auto mix-blend-multiply opacity-90" />
                         </motion.div>
-
-                        {/* LEFT: Brand Text */}
                         <div className="space-y-4 md:space-y-5 text-center lg:text-left">
-
-
                             <h1 className="text-[clamp(2.4rem,10vw,5.5rem)] font-black text-milku-secondary leading-[0.9] uppercase tracking-tighter italic">
                                 <TextReveal className="block" delay={0.15} splashFinished={splashFinished}>GUJARAT'S</TextReveal>
                                 <TextReveal className="block text-milku-primary" delay={0.28} splashFinished={splashFinished}>PUREST</TextReveal>
                                 <TextReveal className="block" delay={0.41} splashFinished={splashFinished}>HERITAGE.</TextReveal>
                             </h1>
-
                             <motion.p initial={{ opacity: 0 }} animate={splashFinished ? { opacity: 1 } : {}} transition={{ delay: 0.8 }}
                                 className="text-[10px] font-black text-milku-primary/70 uppercase tracking-[6px] italic hidden sm:block">
                                 {config.HERO.subtitle}
                             </motion.p>
-
                             <motion.p initial={{ opacity: 0, y: 14 }} animate={splashFinished ? { opacity: 1, y: 0 } : {}}
                                 transition={{ delay: 0.9, duration: 0.8 }}
                                 className="text-[13px] md:text-[15px] text-slate-500 font-medium leading-[1.75] max-w-[460px] line-clamp-4 md:line-clamp-none">
                                 {config.HERO.desc}
                             </motion.p>
-
                             <motion.div initial={{ opacity: 0 }} animate={splashFinished ? { opacity: 1 } : {}} transition={{ delay: 1.05 }}
                                 className="flex flex-wrap justify-center lg:justify-start gap-2">
                                 <TrustBadge icon={ShieldCheck} label="FSSAI Grade A" />
                                 <TrustBadge icon={Leaf} label="No Additives" />
                                 <TrustBadge icon={Award} label="Bilona Method" />
                             </motion.div>
-
                             <motion.div initial={{ opacity: 0, y: 14 }} animate={splashFinished ? { opacity: 1, y: 0 } : {}}
                                 transition={{ delay: 1.2, duration: 0.7 }}
                                 className="flex flex-wrap justify-center lg:justify-start gap-3 pt-1">
@@ -281,18 +337,13 @@ const Home = ({ splashFinished }) => {
                                 </NavLink>
                             </motion.div>
                         </div>
-
-                        {/* RIGHT: Brand Logo — hidden on mobile, shown on lg+ */}
                         <motion.div
                             initial={{ opacity: 0, scale: 0.85 }} animate={splashFinished ? { opacity: 1, scale: 1 } : {}}
                             transition={{ delay: 0.3, duration: 1.1, ease: [0.22, 1, 0.36, 1] }}
                             className="relative hidden lg:flex items-center justify-center h-[420px]"
                         >
-                            {/* Static glow blob — fast radial-gradient instead of blur() */}
                             <div className="absolute w-[400px] h-[400px] rounded-full bg-[radial-gradient(circle_at_center,rgba(0,150,214,0.06)_0%,transparent_60%)] pointer-events-none" />
                             <div className="absolute w-[380px] h-[380px] rounded-full border border-dashed border-milku-primary/15 pointer-events-none" />
-
-                            {/* Logo float */}
                             <motion.img
                                 src="/logo.jpeg"
                                 alt="Jay Gayatri Dairy — Milku"
@@ -302,7 +353,6 @@ const Home = ({ splashFinished }) => {
                                 animate={{ y: [0, -12, 0] }}
                                 transition={{ duration: 4, repeat: Infinity, ease: 'easeInOut' }}
                             />
-
                             <motion.span animate={{ y: [0, -8, 0] }} transition={{ duration: 3.8, repeat: Infinity, ease: 'easeInOut', delay: 0.7 }}
                                 className="absolute bottom-16 -left-4 bg-white border border-milku-primary/25 text-milku-primary text-[9px] font-black uppercase tracking-[3px] px-4 py-2 rounded-full shadow-sm z-20 will-change-transform">
                                 100% Pure
@@ -315,15 +365,11 @@ const Home = ({ splashFinished }) => {
                     </div>
                 </section>
 
-                {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                SECTION 2 — METRICS
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+                {/* SECTION 2 — METRICS */}
                 <ScrollReveal className="py-10 md:py-16 px-5 lg:px-10">
                     <div className="max-w-[1500px] mx-auto bg-white/60 backdrop-blur-3xl border border-white/40 rounded-[40px] md:rounded-[80px] p-8 md:p-16 shadow-xl relative overflow-hidden">
-                        {/* Decorative Elements */}
                         <div className="absolute top-0 right-0 w-64 h-64 bg-milku-primary/5 blur-[100px] rounded-full pointer-events-none"></div>
                         <div className="absolute bottom-0 left-0 w-48 h-48 bg-milku-accent/5 blur-[80px] rounded-full pointer-events-none"></div>
-
                         <div className="grid grid-cols-2 lg:grid-cols-4 gap-8 md:gap-14 relative z-10">
                             {config.METRICS.map((m, i) => (
                                 <MetricCounter key={i} {...m} />
@@ -332,9 +378,7 @@ const Home = ({ splashFinished }) => {
                     </div>
                 </ScrollReveal>
 
-                {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                SECTION 3 — SIGNATURE PRODUCT GRID
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+                {/* SECTION 3 — SIGNATURE PRODUCT GRID */}
                 <ScrollReveal className="pt-24 pb-12 md:py-16 px-4 md:px-6 lg:px-20">
                     <div className="max-w-[1500px] mx-auto space-y-8 md:space-y-12">
                         <div className="flex flex-col lg:flex-row justify-between items-center lg:items-end gap-4 md:gap-6">
@@ -348,11 +392,8 @@ const Home = ({ splashFinished }) => {
                                 Traditional dairy essentials crafted for the modern household.
                             </p>
                         </div>
-                        {/* LIVE PRODUCT TICKER — Draggable & Auto-scrolling marquee */}
                         <div className="relative -mx-4 md:-mx-6 lg:-mx-20 overflow-hidden group/ticker py-10 cursor-grab active:cursor-grabbing">
                             <InteractiveTicker items={mainProducts} speed={0.8} />
-                            
-                            {/* Scroll Indicator Hint */}
                             <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30 group-hover/ticker:opacity-60 transition-opacity pointer-events-none">
                                 <div className="w-12 h-[1px] bg-milku-secondary" />
                                 <span className="text-[8px] font-black uppercase tracking-[4px] text-milku-secondary">Drag to Explore • Live Stream</span>
@@ -362,21 +403,15 @@ const Home = ({ splashFinished }) => {
                     </div>
                 </ScrollReveal>
 
-                {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                SECTION 4 — BILONA LEGACY (Dark Block)
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+                {/* SECTION 4 — BILONA LEGACY */}
                 <ScrollReveal className="py-8 md:py-12 px-4 md:px-10 mt-2 md:mt-6">
                     <div className="relative max-w-[1500px] mx-auto rounded-[40px] md:rounded-[80px] overflow-hidden bg-milku-secondary shadow-2xl">
-                        {/* Animated Background Block */}
                         <div className="absolute inset-0 w-full h-full pointer-events-none">
                             <div className="absolute inset-0 bg-gradient-to-br from-[#0D1B4B] via-milku-secondary to-[#1A237E] z-0"></div>
-                            {/* Animated glowing orbs */}
                             <div className="absolute top-[-20%] left-[-10%] w-[60vw] h-[60vw] md:w-[40vw] md:h-[40vw] rounded-full bg-milku-primary/20 blur-[100px] animate-pulse"></div>
                             <div className="absolute bottom-[-20%] right-[-10%] w-[50vw] h-[50vw] md:w-[30vw] md:h-[30vw] rounded-full bg-milku-accent/15 blur-[100px] animate-pulse" style={{ animationDelay: '2s' }}></div>
-                            {/* Grid pattern overlay for professional look */}
                             <div className="absolute inset-0 bg-[linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] bg-[size:40px_40px] z-0"></div>
                         </div>
-
                         <div className="grid lg:grid-cols-2 gap-10 md:gap-16 items-center relative z-10 px-8 py-12 md:px-16 md:py-20">
                             <div className="space-y-8">
                                 <div className="space-y-4">
@@ -393,7 +428,6 @@ const Home = ({ splashFinished }) => {
                                 </NavLink>
                             </div>
                             <div className="relative flex items-center justify-center h-[320px] md:h-[480px]">
-                                {/* Glassmorphism pedestal for the product */}
                                 <div className="absolute bottom-0 md:bottom-10 w-[70%] h-[30px] md:h-[50px] bg-black/40 blur-2xl rounded-[100%]"></div>
                                 <div className="absolute inset-0 bg-gradient-to-t from-white/10 to-transparent rounded-full blur-3xl opacity-50"></div>
                                 <img src={config.LEGACY_CONTENT.image} alt="Heritage Product"
@@ -405,9 +439,23 @@ const Home = ({ splashFinished }) => {
                     </div>
                 </ScrollReveal>
 
-                {/* ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━
-                SECTION 5 — B2B CTA
-            ━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━━ */}
+                {/* SECTION 5 — CUSTOMER REVIEWS TICKER */}
+                {topReviews.length > 0 && (
+                    <ScrollReveal className="py-24 overflow-hidden">
+                        <div className="max-w-[1500px] mx-auto px-6 mb-12 flex flex-col md:flex-row items-center justify-between gap-6">
+                            <div className="space-y-2 text-center md:text-left">
+                                <span className="text-[9px] font-black text-milku-accent uppercase tracking-[8px]">HAPPY CUSTOMERS</span>
+                                <h2 className="text-white text-4xl md:text-6xl font-black uppercase italic tracking-tighter">Real <span className="text-milku-accent">Voices.</span></h2>
+                            </div>
+                            <NavLink to="/reviews" className="text-[10px] font-black text-white uppercase tracking-[4px] border-b-2 border-white/20 pb-1 hover:border-white transition-all">View All Reviews</NavLink>
+                        </div>
+                        <div className="relative -mx-20">
+                            <ReviewTicker items={topReviews} />
+                        </div>
+                    </ScrollReveal>
+                )}
+
+                {/* SECTION 6 — B2B CTA */}
                 <ScrollReveal className="py-10 md:py-16 px-6 lg:px-20 transition-colors duration-700">
                     <div className="max-w-[1200px] mx-auto text-center space-y-8 md:space-y-10">
                         <div className="space-y-3 md:space-y-4">
@@ -432,10 +480,6 @@ const Home = ({ splashFinished }) => {
                     </div>
                 </ScrollReveal>
             </PageReveal>
-            <style>{`
-                .no-scrollbar::-webkit-scrollbar { display: none; }
-                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
-            `}</style>
         </motion.div>
     );
 };

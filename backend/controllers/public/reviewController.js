@@ -13,9 +13,9 @@ exports.getReviews = async (req, res) => {
         const limit = parseInt(req.query.limit) || 6;
         const skip = (page - 1) * limit;
 
-        // Fetch reviews
+        // Fetch reviews - SORT BY RATING FIRST (5 to 1) then by date
         const reviews = await Review.find()
-            .sort({ submittedAt: -1 })
+            .sort({ rating: -1, submittedAt: -1 })
             .skip(skip)
             .limit(limit);
 
@@ -63,34 +63,23 @@ exports.getReviews = async (req, res) => {
 /**
  * @desc    Submit a new review
  * @route   POST /api/reviews
- * @access  Public (Requires Google Token)
+ * @access  Public
  */
 exports.submitReview = async (req, res) => {
     try {
-        const { googleToken, rating, reviewText, productName, city, location } = req.body;
+        const { reviewerName, googleEmail, rating, reviewText, productName, city } = req.body;
 
-        if (!googleToken) {
-            return res.status(401).json({ success: false, message: 'Google authentication required' });
-        }
-
-        // Verify Google Token
-        let payload;
-        try {
-            const ticket = await client.verifyIdToken({
-                idToken: googleToken,
-                audience: process.env.GOOGLE_CLIENT_ID,
+        if (!reviewerName || !googleEmail || !rating || !reviewText) {
+            return res.status(400).json({ 
+                success: false, 
+                message: 'Please provide all required fields: Name, Email, Rating, and Review.' 
             });
-            payload = ticket.getPayload();
-        } catch (error) {
-            return res.status(401).json({ success: false, message: 'Invalid Google token' });
         }
 
-        const { sub: googleId, email: googleEmail, name: googleName, picture: googleAvatar } = payload;
-
-        // Check for duplicate: same googleId + same product within last 30 days
+        // Check for duplicate: same email + same product within last 30 days
         const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000);
         const existingReview = await Review.findOne({
-            googleId,
+            googleEmail,
             productName,
             submittedAt: { $gte: thirtyDaysAgo }
         });
@@ -98,24 +87,20 @@ exports.submitReview = async (req, res) => {
         if (existingReview) {
             return res.status(409).json({
                 success: false,
-                message: 'You have already reviewed this product recently. Please wait 30 days before submitting another review.'
+                message: 'You have already reviewed this recently. Please wait 30 days before submitting another review.'
             });
         }
 
         const newReview = await Review.create({
-            reviewerName: googleName,
-            location: location || city,
+            reviewerName,
+            googleEmail,
             rating,
             reviewText,
             productName,
             city,
             submitterIP: req.ip || req.headers['x-forwarded-for'] || req.socket.remoteAddress,
-            googleId,
-            googleEmail,
-            googleName,
-            googleAvatar,
-            verified: true,
-            approved: true // Set to true by default as requested
+            verified: false, // Not Google verified anymore
+            approved: true
         });
 
         res.status(201).json({
