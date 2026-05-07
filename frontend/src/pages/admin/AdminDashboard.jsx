@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useAuth } from '../../context/AuthContext';
-import { getProducts, getCategories, getCustomers } from '../../services/api';
+import { getProducts, getCategories, getCustomers, adminGetPendingReviews } from '../../services/api';
 import { 
   Package, 
   Layers,
@@ -12,7 +12,8 @@ import {
   Settings as SettingsIcon,
   RefreshCw,
   Activity,
-  BarChart3
+  BarChart3,
+  MessageSquare
 } from 'lucide-react';
 import { useNavigate } from 'react-router-dom';
 import AdminNavbar from '../../components/admin/AdminNavbar';
@@ -23,20 +24,22 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const ADMIN_PATH = "/admin-milku-secure-9281";
   
-  const [stats, setStats] = useState({ totalProducts: 0, totalCategories: 0, totalCustomers: 0 });
+  const [stats, setStats] = useState({ totalProducts: 0, totalCategories: 0, totalCustomers: 0, pendingReviews: 0 });
   const [loading, setLoading] = useState(true);
 
   const refreshStats = async () => {
     try {
-      const [prodRes, catRes, custRes] = await Promise.all([
+      const [prodRes, catRes, custRes, revRes] = await Promise.all([
         getProducts(), 
         getCategories(),
-        getCustomers()
+        getCustomers(),
+        adminGetPendingReviews()
       ]);
       setStats({
         totalProducts: prodRes.data.success ? prodRes.data.data.length : 0,
         totalCategories: catRes.data.success ? catRes.data.data.length : 0,
-        totalCustomers: custRes.data.success ? custRes.data.data.length : 0
+        totalCustomers: custRes.data.success ? custRes.data.data.length : 0,
+        pendingReviews: revRes.data.success ? revRes.data.data.length : 0
       });
     } catch (err) {
       console.error("Failed to load stats");
@@ -146,6 +149,28 @@ const AdminDashboard = () => {
                         </div>
                         <div className="relative z-10">
                            <div className="w-14 h-14 bg-[#1565C0] rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-all shadow-xl">
+                              <ChevronRight size={28} strokeWidth={3} />
+                           </div>
+                        </div>
+                     </button>
+
+                     <button 
+                       onClick={() => navigate(`${ADMIN_PATH}/manage-reviews`)}
+                       className="bg-white text-milku-secondary border-2 border-slate-100 p-10 rounded-[40px] shadow-sm flex flex-col items-center justify-between group hover:border-amber-400 hover:shadow-2xl transition-all h-[320px] md:col-span-2"
+                     >
+                        <div className="absolute top-0 right-0 w-48 h-48 bg-amber-400/5 rounded-full -mr-10 -mt-10 blur-3xl group-hover:bg-amber-400/10 transition-all" />
+                        <div className="space-y-4 text-center relative z-10">
+                           <div className="inline-flex items-center gap-3 bg-amber-50 px-4 py-2 rounded-full border border-amber-100">
+                              <MessageSquare size={14} className="text-amber-500" />
+                              <span className="text-[10px] font-black uppercase tracking-[3px] text-amber-500">Public Feedback</span>
+                           </div>
+                           <h2 className="text-3xl md:text-4xl font-black uppercase italic tracking-tighter leading-none">Review Moderation</h2>
+                           <p className="text-[10px] font-black text-slate-400 uppercase tracking-widest max-w-[400px] mx-auto">
+                               Manage customer voices. You have <span className="text-amber-500">{stats.pendingReviews}</span> pending reviews awaiting approval.
+                           </p>
+                        </div>
+                        <div className="relative z-10">
+                           <div className="w-14 h-14 bg-amber-400 rounded-full flex items-center justify-center text-white group-hover:scale-110 transition-all shadow-xl shadow-amber-400/20">
                               <ChevronRight size={28} strokeWidth={3} />
                            </div>
                         </div>

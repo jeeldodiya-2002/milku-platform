@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Menu, X, LayoutDashboard, Layers, LogOut, ExternalLink, Users, Settings } from 'lucide-react';
+import { Menu, X, LayoutDashboard, Layers, LogOut, ExternalLink, Users, Settings, MessageSquare } from 'lucide-react';
 import { useAuth } from '../../context/AuthContext';
 
 const AdminNavbar = () => {
@@ -23,8 +23,9 @@ const AdminNavbar = () => {
 
     const links = [
         { name: 'Dashboard', path: `${ADMIN_PATH}/dashboard`, icon: LayoutDashboard },
-        { name: 'Category Management', path: `${ADMIN_PATH}/manage-categories`, icon: Layers },
-        { name: 'Partner Network', path: `${ADMIN_PATH}/manage-customers`, icon: Users },
+        { name: 'Catalog', path: `${ADMIN_PATH}/manage-categories`, icon: Layers },
+        { name: 'Network', path: `${ADMIN_PATH}/manage-customers`, icon: Users },
+        { name: 'Reviews', path: `${ADMIN_PATH}/manage-reviews`, icon: MessageSquare },
         { name: 'Settings', path: `${ADMIN_PATH}/settings`, icon: Settings }
     ];
 

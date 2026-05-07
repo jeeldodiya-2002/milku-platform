@@ -34,6 +34,8 @@ const EditProduct = lazy(() => import('./pages/admin/EditProduct'));
 const AdminSettings = lazy(() => import('./pages/admin/AdminSettings'));
 const PrivacyPolicy = lazy(() => import('./pages/public/PrivacyPolicy'));
 const TermsAndConditions = lazy(() => import('./pages/public/TermsAndConditions'));
+const Reviews = lazy(() => import('./pages/public/Reviews'));
+const ManageReviews = lazy(() => import('./pages/admin/ManageReviews'));
 const NotFound = lazy(() => import('./pages/public/NotFound'));
 
 
@@ -116,6 +118,7 @@ const AnimatedRoutes = ({ splashFinished }) => {
                             <Route path="/trusted-by" element={<Customers splashFinished={splashFinished} />} />
                             <Route path="/privacy-policy" element={<PrivacyPolicy splashFinished={splashFinished} />} />
                             <Route path="/terms-conditions" element={<TermsAndConditions splashFinished={splashFinished} />} />
+                            <Route path="/reviews" element={<Reviews splashFinished={splashFinished} />} />
 
 
                             <Route path="/admin-milku-secure-9281/login" element={<AdminLogin />} />
@@ -123,6 +126,7 @@ const AnimatedRoutes = ({ splashFinished }) => {
 
                             <Route path="/admin-milku-secure-9281/manage-categories" element={<ProtectedRoute><ManageCategories /></ProtectedRoute>} />
                             <Route path="/admin-milku-secure-9281/manage-customers" element={<ProtectedRoute><ManageCustomers /></ProtectedRoute>} />
+                            <Route path="/admin-milku-secure-9281/manage-reviews" element={<ProtectedRoute><ManageReviews /></ProtectedRoute>} />
                             <Route path="/admin-milku-secure-9281/add-product" element={<ProtectedRoute><AddProduct /></ProtectedRoute>} />
                             <Route path="/admin-milku-secure-9281/edit-product/:id" element={<ProtectedRoute><EditProduct /></ProtectedRoute>} />
                             <Route path="/admin-milku-secure-9281/settings" element={<ProtectedRoute><AdminSettings /></ProtectedRoute>} />

@@ -19,6 +19,8 @@ const productRoutes = require('./routes/public/productRoutes');
 const settingsRoutes = require('./routes/public/settingsRoutes');
 const categoryRoutes = require('./routes/public/categoryRoutes');
 const customerRoutes = require('./routes/public/customerRoutes');
+const reviewRoutes = require('./routes/public/reviewRoutes');
+const adminReviewRoutes = require('./routes/admin/reviewRoutes');
 
 const path = require('path');
 const app = express();
@@ -90,6 +92,8 @@ app.use('/api/products', productRoutes);
 app.use('/api/settings', settingsRoutes);
 app.use('/api/categories', categoryRoutes);
 app.use('/api/customers', customerRoutes);
+app.use('/api/reviews', reviewRoutes);
+app.use('/api/admin/reviews', adminReviewRoutes);
 
 // HIGH-AVAILABILITY HEALTH CHECK
 app.get('/api/health', (req, res) => {

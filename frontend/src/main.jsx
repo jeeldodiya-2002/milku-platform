@@ -11,16 +11,22 @@ import ErrorBoundary from './components/ErrorBoundary.jsx'
 // Initialize GA4 - Milku Production Tracking
 initializeGA("G-4VN38TY82Q"); // Real Measurement ID for Milku
 
+import { GoogleOAuthProvider } from '@react-oauth/google';
+
+// ... existing imports ...
+
 createRoot(document.getElementById('root')).render(
   <StrictMode>
-    <HelmetProvider>
-      <ErrorBoundary>
-        <AuthProvider>
-          <SettingsProvider>
-            <App />
-          </SettingsProvider>
-        </AuthProvider>
-      </ErrorBoundary>
-    </HelmetProvider>
+    <GoogleOAuthProvider clientId={import.meta.env.VITE_GOOGLE_CLIENT_ID || "PASTE_YOUR_GOOGLE_CLIENT_ID_HERE"}>
+      <HelmetProvider>
+        <ErrorBoundary>
+          <AuthProvider>
+            <SettingsProvider>
+              <App />
+            </SettingsProvider>
+          </AuthProvider>
+        </ErrorBoundary>
+      </HelmetProvider>
+    </GoogleOAuthProvider>
   </StrictMode>,
 )

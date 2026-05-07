@@ -102,4 +102,11 @@ export const createCustomer = (data) => api.post('/customers', data);
 export const updateCustomer = (id, data) => api.put(`/customers/${id}`, data);
 export const deleteCustomer = (id) => api.delete(`/customers/${id}`);
 
+// Review API
+export const getReviews = (page = 1, limit = 6) => api.get(`/reviews?page=${page}&limit=${limit}`);
+export const submitReview = (data) => api.post('/reviews', data);
+export const adminGetPendingReviews = () => api.get('/admin/reviews/pending');
+export const adminApproveReview = (id) => api.put(`/admin/reviews/${id}/approve`);
+export const adminDeleteReview = (id) => api.delete(`/admin/reviews/${id}`);
+
 export default api;

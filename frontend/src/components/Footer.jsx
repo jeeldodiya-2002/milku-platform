@@ -50,6 +50,7 @@ const Footer = () => {
                                 { name: 'Trusted By', path: '/trusted-by' },
                                 { name: 'Partner', path: '/bulk-order' },
                                 { name: 'Contact', path: '/contact' },
+                                { name: 'Reviews', path: '/reviews' },
                                 { name: 'Privacy Policy', path: '/privacy-policy' },
                                 { name: 'Terms & Conditions', path: '/terms-conditions' }
                             ].map((link) => (
