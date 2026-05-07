@@ -64,7 +64,7 @@ const Footer = () => {
                     <div className="space-y-6">
                         <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-milku-accent">COLLECTIONS</h4>
                         <ul className="space-y-5">
-                            {categories.filter(c => c.isMain).slice(0, 5).map((cat) => (
+                            {categories.filter(c => c.isMain === true || String(c.isMain) === 'true').slice(0, 5).map((cat) => (
                                 <li key={cat._id}>
                                     <NavLink 
                                         to={`/products?category=${cat.name.toLowerCase().replace(/[\s\/]+/g, '-')}`} 
