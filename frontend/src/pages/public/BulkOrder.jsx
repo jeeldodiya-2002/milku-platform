@@ -15,13 +15,13 @@ const PRODUCT_FAMILIES = [
     { id: 'shrikhand', name: 'Shrikhand', icon: IceCream, color: '#FBC31F', items: ['Mattho', 'Rajbhog', 'Mango', 'American Dry Fruit', 'Kesar Elaichi', 'Elaichi', 'Kaju Draksh', 'Kesar Dry Fruit', 'Badam Pista'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Cups' },
     { id: 'lassi', name: 'Lassi', icon: GlassWater, color: '#D86FA0', items: ['Kesar Dry Fruit', 'Mava', 'Rose', 'Mango', 'Cold Coco'], packageType: 'fixed', packages: ['200ml', '500ml', '1L'], unit: 'Bottles' },
     { id: 'basundi', name: 'Basundi', icon: Coffee, color: '#FF9800', items: ['Plane', 'Kesar Dry Fruit', 'Kesar Angur', 'Anjir', 'Chandni Bahar', 'Sitafal', 'Mango Delight', 'Mango Fruit Plaza'], packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Cups' },
-    { id: 'peda', name: 'Penda', icon: Cookie, color: '#E8571A', items: ['White', 'Kesar Elaichi', 'Thabdi', 'Milku Special'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
+    { id: 'peda', name: 'Penda', icon: Cookie, color: '#E8571A', items: ['White', 'Kesar Elaichi', 'Thabdi', 'Milku Special', 'mix mithai'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
     { id: 'barfi', name: 'Barfi', icon: LayoutGrid, color: '#8B5CF6', items: ['Gulkand', 'Anjir', 'Kalakand', 'Pista', 'Chocolate', 'Kesar', 'Rose', 'Akhrot', 'Compound'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
     { id: 'halwa', name: 'Halwa', icon: Cake, color: '#FBC31F', items: ['Bombay', 'Dry Fruit', 'Dudhi', 'Kaju Akhrot', 'Gajar'], packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Boxes' },
     { id: 'cruz', name: 'Cruz', icon: Sparkles, color: '#EC4899', items: ['Raja Rani', 'Volcano', 'Madhu Malti', 'Red Velvet'], packageType: 'fixed', packages: ['Standard'], unit: 'Units' },
     { id: 'mava', name: 'Mava', icon: Package, color: '#FF9800', items: ['Sweet Mava', 'Molo Mavo', 'Cow Mava', 'Lal Mava'], packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Packets' },
-    { id: 'chikki', name: 'Chikki', icon: Cookie, color: '#D86FA0', items: ['Khajur Dry Fruit', 'Anjur Dry Fruit'], packageType: 'fixed', packages: ['250g', '500g'], unit: 'Boxes' },
-    { id: 'special', name: 'Special Items', icon: Gift, color: '#F59E0B', items: ['Premium Kaju Katri', 'Mix Dry Fruit Mithai'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
+    { id: 'chikki', name: 'Chikki', icon: Cookie, color: '#D86FA0', items: ['Khajur Dry Fruit', 'Anjir Dry Fruit'], packageType: 'fixed', packages: ['250g', '500g'], unit: 'Boxes' },
+    { id: 'special', name: 'Special Items', icon: Gift, color: '#F59E0B', items: ['Premium Kaju Katri', 'Mix Dry Fruit Mithai', 'Kesar Kaju Katri', 'Kaju Kasata', 'Kaju Anjir Role', 'Strawberry Kaju Katri', 'Sangam Kaju Katri', 'Cadbury Ball', 'Roasted Almond Ball', 'Orange Bite', 'Blueberry Bite', 'Coconut Ball', 'Kaju Gajar', 'Meva Bite', 'Dry Fruit Laddu (Sugar Free)', 'Kaju Pan', 'Choco Bite'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
 ];
 
 const ALL_ITEMS = PRODUCT_FAMILIES.flatMap(f => f.items.map(item => ({ 
