@@ -19,6 +19,8 @@ gsap.registerPlugin(ScrollTrigger);
 
 
 
+import { getProducts, getImageUrl } from '../../services/api';
+
 // ─── TRUST BADGE ──────────────────────────────────────────────────────────────
 const TrustBadge = ({ icon: Icon, label }) => (
     <div className="flex items-center gap-2 bg-slate-50 border border-slate-100 px-4 py-2 rounded-full">
@@ -46,7 +48,7 @@ const ProductSlide = ({ product, index }) => {
             </div>
             <div className="relative flex items-end justify-center pt-12 pb-4 px-6 min-h-[220px] overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,150,214,0.03)_0%,transparent_70%)] group-hover:scale-150 transition-transform duration-1000" />
-                <img src={product.image || product.images?.[0]} alt={product.name}
+                <img src={getImageUrl(product.image || product.images?.[0])} alt={product.name}
                     crossOrigin="anonymous"
                     className="relative z-10 h-32 md:h-44 w-auto object-contain transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3" />
             </div>
@@ -114,7 +116,6 @@ const Home = ({ splashFinished }) => {
     useEffect(() => {
         const fetchHomeData = async () => {
             try {
-                const { getProducts } = await import('../../services/api');
                 const res = await getProducts();
                 if (res.data.success) {
                     const allProds = res.data.data.filter(p => p.isActive !== false);
@@ -284,20 +285,43 @@ const Home = ({ splashFinished }) => {
                                 Traditional dairy essentials crafted for the modern household.
                             </p>
                         </div>
-                        {/* LIVE PRODUCT TICKER */}
-                        <div className="relative -mx-4 md:-mx-6 lg:-mx-20 px-4 md:px-6 lg:px-20 overflow-hidden group/ticker">
-                            <div className="flex gap-6 md:gap-10 overflow-x-auto no-scrollbar pb-12 pt-4 snap-x snap-mandatory px-4 md:px-0">
+                        {/* LIVE PRODUCT TICKER — Auto-scrolling marquee */}
+                        <div className="relative -mx-4 md:-mx-6 lg:-mx-20 overflow-hidden group/ticker py-10">
+                            <motion.div 
+                                className="flex gap-6 md:gap-10 w-fit"
+                                animate={{ x: [0, -1 * (mainProducts.length * 380)] }}
+                                transition={{ 
+                                    duration: mainProducts.length * 5, 
+                                    repeat: Infinity, 
+                                    ease: "linear",
+                                    pauseOnHover: true 
+                                }}
+                                style={{ display: 'flex' }}
+                            >
+                                {/* First set of products */}
                                 {mainProducts.map((prod, i) => (
-                                    <div key={prod._id || i} className="snap-center first:pl-4 last:pr-4 md:first:pl-0 md:last:pr-0">
+                                    <div key={`set1-${prod._id || i}`} className="shrink-0">
                                         <ProductSlide product={prod} index={i} />
                                     </div>
                                 ))}
-                            </div>
+                                {/* Duplicated set for seamless loop */}
+                                {mainProducts.map((prod, i) => (
+                                    <div key={`set2-${prod._id || i}`} className="shrink-0">
+                                        <ProductSlide product={prod} index={i} />
+                                    </div>
+                                ))}
+                                {/* Triplicated set for ultra-wide screens */}
+                                {mainProducts.map((prod, i) => (
+                                    <div key={`set3-${prod._id || i}`} className="shrink-0">
+                                        <ProductSlide product={prod} index={i} />
+                                    </div>
+                                ))}
+                            </motion.div>
                             
                             {/* Scroll Indicator Hint */}
-                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30 group-hover/ticker:opacity-60 transition-opacity">
+                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30 group-hover/ticker:opacity-60 transition-opacity">
                                 <div className="w-12 h-[1px] bg-milku-secondary" />
-                                <span className="text-[8px] font-black uppercase tracking-[4px] text-milku-secondary">Swipe to explore</span>
+                                <span className="text-[8px] font-black uppercase tracking-[4px] text-milku-secondary">Live Inventory Stream</span>
                                 <div className="w-12 h-[1px] bg-milku-secondary" />
                             </div>
                         </div>
