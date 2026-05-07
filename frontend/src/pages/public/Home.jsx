@@ -30,52 +30,38 @@ const TrustBadge = ({ icon: Icon, label }) => (
 // ─── PRODUCT CARD ─────────────────────────────────────────────────────────────
 const ProductSlide = ({ product, index }) => {
     const cardRef = useRef();
-    const dirs = [
-        { x: -80, y: 0, rotation: -4 },
-        { x: 0, y: 70, rotation: 0 },
-        { x: 80, y: 0, rotation: 4 },
-    ];
-    const d = dirs[index % 3];
-
-    useGSAP(() => {
-        gsap.from(cardRef.current, {
-            ...d, opacity: 0, scale: 0.9,
-            delay: index * 0.15,
-            duration: 1.5,
-            ease: 'expo.out',
-            scrollTrigger: { trigger: cardRef.current, start: 'top 88%' }
-        });
-    }, { scope: cardRef });
-
+    
     return (
         <motion.div
             ref={cardRef}
             whileHover={{ y: -5 }}
-            className="group relative flex flex-col rounded-[24px] md:rounded-[40px] bg-white border border-slate-100 shadow-[0_6px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_56px_rgba(0,100,200,0.08)] transition-all duration-500 will-change-transform"
+            className="group relative flex flex-col rounded-[32px] bg-white border border-slate-100 shadow-[0_6px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_56px_rgba(0,100,200,0.08)] transition-all duration-500 will-change-transform min-w-[280px] md:min-w-[340px]"
         >
             <div className="absolute top-4 md:top-5 left-4 md:left-5 z-10">
                 <span className="inline-flex items-center gap-1 md:gap-1.5 bg-milku-secondary/6 text-milku-secondary text-[7px] md:text-[9px] font-black uppercase tracking-[2px] md:tracking-[4px] px-2.5 py-1 md:px-3 md:py-1.5 rounded-full border border-milku-secondary/10">
                     <ShieldCheck size={10} className="text-milku-primary hidden sm:block" />
                     <span className="sm:hidden block w-1 h-1 bg-milku-primary rounded-full"></span>
-                    {product.tag}
+                    {product.category || 'PREMIUM'}
                 </span>
             </div>
-            <div className="relative flex items-end justify-center pt-8 pb-2 px-3 md:pt-12 md:pb-3 md:px-5 min-h-[140px] md:min-h-[200px] overflow-hidden">
-                <img src={product.image} alt={product.title}
+            <div className="relative flex items-end justify-center pt-12 pb-4 px-6 min-h-[220px] overflow-hidden">
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,150,214,0.03)_0%,transparent_70%)] group-hover:scale-150 transition-transform duration-1000" />
+                <img src={product.image || product.images?.[0]} alt={product.name}
                     crossOrigin="anonymous"
-                    className="relative z-10 h-28 md:h-40 w-auto object-contain transition-transform duration-700 ease-out" />
+                    className="relative z-10 h-32 md:h-44 w-auto object-contain transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3" />
             </div>
-            <div className="flex-1 px-4 pb-4 pt-2 md:px-6 md:pb-6 flex flex-col justify-between">
-                <div className="space-y-1 mb-2 md:mb-4">
-                    <p className="text-[7px] md:text-[9px] font-black text-milku-primary uppercase tracking-[3px] md:tracking-[5px] hidden md:block">{product.tag}</p>
-                    <h3 className="text-[15px] md:text-xl font-black text-milku-secondary uppercase tracking-tight leading-tight italic line-clamp-2 md:line-clamp-none group-hover:text-milku-primary transition-colors">{product.title}</h3>
-                    <p className="text-[7px] md:text-[9px] font-bold text-slate-500 uppercase tracking-widest line-clamp-1">{product.meta}</p>
+            <div className="flex-1 px-6 pb-6 pt-2 flex flex-col justify-between">
+                <div className="space-y-1 mb-4">
+                    <p className="text-[9px] font-black text-milku-primary uppercase tracking-[5px]">{product.category}</p>
+                    <h3 className="text-lg md:text-xl font-black text-milku-secondary uppercase tracking-tight leading-tight italic group-hover:text-milku-primary transition-colors line-clamp-1">{product.name}</h3>
+                    <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest line-clamp-1">
+                        {product.availableSizes?.join(', ') || product.packaging}
+                    </p>
                 </div>
                 <NavLink to="/products"
-                    className="inline-flex items-center justify-between w-full text-[8px] md:text-[10px] font-black uppercase tracking-[2px] md:tracking-[3px] text-milku-secondary hover:text-milku-primary transition-colors duration-300 pt-3 md:pt-4 border-t border-slate-100">
-                    <span className="hidden sm:inline">EXPLORE PRODUCT</span>
-                    <span className="sm:hidden">EXPLORE</span>
-                    <span className="w-6 h-6 md:w-8 md:h-8 rounded-full bg-milku-secondary group-hover:bg-milku-primary flex items-center justify-center transition-colors duration-300 shadow">
+                    className="inline-flex items-center justify-between w-full text-[10px] font-black uppercase tracking-[3px] text-milku-secondary hover:text-milku-primary transition-colors duration-300 pt-4 border-t border-slate-100">
+                    <span>EXPLORE PRODUCT</span>
+                    <span className="w-8 h-8 rounded-full bg-milku-secondary group-hover:bg-milku-primary flex items-center justify-center transition-colors duration-300 shadow">
                         <ArrowRight size={12} className="text-white" />
                     </span>
                 </NavLink>
@@ -118,17 +104,39 @@ const MetricCounter = ({ value, suffix, label }) => {
 // HOME PAGE
 // ═══════════════════════════════════════════════════════════════════════════════
 const Home = ({ splashFinished }) => {
-    const { settings, getWhatsAppLink } = useSettings(); const containerRef = useRef();
+    const { settings, getWhatsAppLink, categories: dbCategories } = useSettings(); 
+    const containerRef = useRef();
     const config = MASTER_CONFIG;
-    const [randomProducts, setRandomProducts] = useState([]);
+    
+    const [products, setProducts] = useState([]);
+    const [mainProducts, setMainProducts] = useState([]);
 
     useEffect(() => {
-        // Pick 2 random products on every visit as requested - Static shuffle to avoid re-renders
-        if (randomProducts.length === 0) {
-            const shuffled = [...MASTER_CONFIG.GRID_PRODUCTS].sort(() => 0.5 - Math.random());
-            setRandomProducts(shuffled.slice(0, 2));
+        const fetchHomeData = async () => {
+            try {
+                const { getProducts } = await import('../../services/api');
+                const res = await getProducts();
+                if (res.data.success) {
+                    const allProds = res.data.data.filter(p => p.isActive !== false);
+                    setProducts(allProds);
+                }
+            } catch (err) {
+                console.error("Home Data Fetch Failed:", err);
+            }
+        };
+        fetchHomeData();
+    }, []);
+
+    useEffect(() => {
+        if (dbCategories.length > 0 && products.length > 0) {
+            const mainCatNames = dbCategories
+                .filter(c => c.isMain === true || String(c.isMain) === 'true')
+                .map(c => c.name);
+            
+            const filtered = products.filter(p => mainCatNames.includes(p.category));
+            setMainProducts(filtered.length > 0 ? filtered : products.slice(0, 8));
         }
-    }, [randomProducts.length]);
+    }, [dbCategories, products]);
 
     const { scrollYProgress } = useScroll({ target: containerRef, offset: ["start start", "end end"] });
     const dynamicBackground = useTransform(
@@ -276,10 +284,22 @@ const Home = ({ splashFinished }) => {
                                 Traditional dairy essentials crafted for the modern household.
                             </p>
                         </div>
-                        <div className="grid grid-cols-1 md:grid-cols-2 gap-6 md:gap-10 max-w-4xl mx-auto">
-                            {randomProducts.map((prod, i) => (
-                                <ProductSlide key={prod.id} product={prod} index={i} />
-                            ))}
+                        {/* LIVE PRODUCT TICKER */}
+                        <div className="relative -mx-4 md:-mx-6 lg:-mx-20 px-4 md:px-6 lg:px-20 overflow-hidden group/ticker">
+                            <div className="flex gap-6 md:gap-10 overflow-x-auto no-scrollbar pb-12 pt-4 snap-x snap-mandatory px-4 md:px-0">
+                                {mainProducts.map((prod, i) => (
+                                    <div key={prod._id || i} className="snap-center first:pl-4 last:pr-4 md:first:pl-0 md:last:pr-0">
+                                        <ProductSlide product={prod} index={i} />
+                                    </div>
+                                ))}
+                            </div>
+                            
+                            {/* Scroll Indicator Hint */}
+                            <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30 group-hover/ticker:opacity-60 transition-opacity">
+                                <div className="w-12 h-[1px] bg-milku-secondary" />
+                                <span className="text-[8px] font-black uppercase tracking-[4px] text-milku-secondary">Swipe to explore</span>
+                                <div className="w-12 h-[1px] bg-milku-secondary" />
+                            </div>
                         </div>
                     </div>
                 </ScrollReveal>
@@ -354,6 +374,10 @@ const Home = ({ splashFinished }) => {
                     </div>
                 </ScrollReveal>
             </PageReveal>
+            <style>{`
+                .no-scrollbar::-webkit-scrollbar { display: none; }
+                .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+            `}</style>
         </motion.div>
     );
 };
