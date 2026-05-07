@@ -11,7 +11,7 @@ const SEO = ({
     keywords,
     robots = "index, follow",
     canonical,
-    ogImage = "https://milkudairy.com/og-image.jpg",
+    ogImage = "https://milkudairy.com/logo.jpeg",
     ogType = "website"
 }) => {
     const siteName = "Milku® — Jay Gayatri Dairy";
