@@ -118,7 +118,7 @@ const BulkOrder = ({ splashFinished }) => {
                 setConfig(newConfig);
                 return prev.filter(x => x !== id);
             } else {
-                const item = ALL_ITEMS.find(p => p.id === id);
+                const item = allItems.find(p => p.id === id);
                 setConfig(prev => ({
                     ...prev,
                     [id]: { 
@@ -388,7 +388,7 @@ const BulkOrder = ({ splashFinished }) => {
                                                                         {item.packageType === 'bulk' && (
                                                                             <div className="flex flex-col items-end ml-auto gap-1">
                                                                                 <div className="flex gap-1">
-                                                                                    {(PRODUCT_FAMILIES.find(f => f.id === item.categoryId)?.units || ['kg', 'gm']).map(u => (
+                                                                                    {(productFamilies.find(f => f.id === item.categoryId)?.units || ['kg', 'gm']).map(u => (
                                                                                         <button 
                                                                                             key={u}
                                                                                             onClick={() => updateUnit(item.id, u)}
