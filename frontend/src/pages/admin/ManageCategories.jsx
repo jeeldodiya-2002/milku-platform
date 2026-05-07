@@ -133,7 +133,11 @@ const ManageCategories = () => {
       if (!editingId || actionLoading) return;
       setActionLoading(true);
       try {
-         const res = await updateProduct(editingId, quickForm);
+         const data = new FormData();
+         data.append('name', quickForm.name);
+         data.append('shortDescription', quickForm.shortDescription);
+
+         const res = await updateProduct(editingId, data);
          if (res.data.success) {
             setAllProducts(allProducts.map(p => p._id === editingId ? { ...p, ...quickForm } : p));
             setEditingId(null);
@@ -149,7 +153,10 @@ const ManageCategories = () => {
       if (actionLoading) return;
       setActionLoading(true);
       try {
-         const res = await updateProduct(product._id, { isActive: !product.isActive });
+         const data = new FormData();
+         data.append('isActive', !product.isActive);
+
+         const res = await updateProduct(product._id, data);
          if (res.data.success) {
             setAllProducts(allProducts.map(p => p._id === product._id ? { ...p, isActive: !p.isActive } : p));
          }
