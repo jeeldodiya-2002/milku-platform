@@ -78,42 +78,60 @@ const Footer = () => {
                     </div>
 
                     {/* COLUMN Contact */}
-                    <div className="space-y-6">
-                        <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-milku-accent">HEADQUARTERS</h4>
-                        <ul className="space-y-8">
-                            <li className="flex gap-5 group">
-                                <a href={settings.googleMapsLink || "https://maps.app.goo.gl/8pdAN8voMJFbgXNg8"} target="_blank" rel="noopener noreferrer" className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-milku-primary shrink-0 hover:bg-milku-primary hover:text-white transition-all">
-                                    <MapPin size={18} />
-                                </a>
-                                <span className="text-sm font-medium text-white/60 leading-relaxed uppercase group-hover:text-white transition-colors tracking-tighter italic">
-                                    <a href={settings.googleMapsLink || "https://maps.app.goo.gl/8pdAN8voMJFbgXNg8"} target="_blank" rel="noopener noreferrer">
-                                        {settings.address}
-                                    </a>
-                                </span>
-                            </li>
-                            <li className="flex gap-5 group items-center">
-                                <a href={`mailto:${settings.email}`} className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-milku-primary shrink-0 hover:bg-milku-primary hover:text-white transition-all">
-                                    <Mail size={18} />
-                                </a>
-                                <a href={`mailto:${settings.email}`} className="text-sm font-bold text-white/80 group-hover:text-white transition-colors uppercase tracking-tight">{settings.email}</a>
-                            </li>
-                            <li className="flex gap-5 group items-center">
-                                <a href={`tel:${settings.whatsappNumber}`} className="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center text-milku-primary shrink-0 hover:bg-milku-primary hover:text-white transition-all">
-                                    <Phone size={18} />
-                                </a>
-                                <a href={`tel:${settings.whatsappNumber}`} className="text-sm font-bold text-white/80 group-hover:text-white transition-colors">
-                                    +91 {String(settings.whatsappNumber).replace(/\D/g, '').slice(-10)}
-                                </a>
-                            </li>
-                        </ul>
-                        <div className="pt-8 border-t border-white/5">
-                             <div className="flex items-center gap-4 text-white/40">
-                                <ShieldCheck size={28} className="text-milku-accent" />
-                                <div className="flex flex-col">
-                                    <span className="text-[9px] font-black tracking-widest uppercase">FSSAI License</span>
-                                    <span className="text-sm font-black text-white uppercase">{settings.fssaiNumber}</span>
+                    <div className="lg:col-span-1 space-y-8">
+                        <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-milku-accent">OUR PRESENCE</h4>
+                        
+                        <div className="space-y-10 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
+                            {(settings.branches && settings.branches.length > 0 ? settings.branches : []).map((branch, idx) => (
+                                <div key={idx} className="space-y-4 border-l-2 border-white/5 pl-6 relative">
+                                    {branch.isMain && (
+                                        <div className="absolute -left-[2px] top-0 w-[2px] h-8 bg-milku-primary shadow-[0_0_15px_rgba(21,101,192,0.8)]" />
+                                    )}
+                                    <div>
+                                        <h5 className="text-[10px] font-black uppercase tracking-widest text-white/90 flex items-center gap-2">
+                                            {branch.name || (branch.isMain ? "Main Branch" : `Branch 0${idx + 1}`)}
+                                            {branch.isMain && <span className="bg-milku-primary/20 text-milku-primary text-[7px] px-2 py-0.5 rounded-full border border-milku-primary/30">MAIN</span>}
+                                        </h5>
+                                    </div>
+                                    <ul className="space-y-4">
+                                        <li className="flex gap-4 group">
+                                            <a href={branch.googleMapsLink || "#"} target="_blank" rel="noopener noreferrer" className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-milku-primary shrink-0 hover:bg-milku-primary hover:text-white transition-all shadow-lg">
+                                                <MapPin size={14} />
+                                            </a>
+                                            <span className="text-[11px] font-medium text-white/50 leading-relaxed uppercase group-hover:text-white transition-colors tracking-tight italic">
+                                                <a href={branch.googleMapsLink || "#"} target="_blank" rel="noopener noreferrer">
+                                                    {branch.address}
+                                                </a>
+                                            </span>
+                                        </li>
+                                        <div className="flex flex-wrap gap-4">
+                                            <li className="flex gap-3 group items-center">
+                                                <a href={`mailto:${branch.email}`} className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-milku-primary shrink-0 hover:bg-milku-primary hover:text-white transition-all">
+                                                    <Mail size={14} />
+                                                </a>
+                                                <a href={`mailto:${branch.email}`} className="text-[10px] font-bold text-white/70 group-hover:text-white transition-colors uppercase tracking-tighter">{branch.email}</a>
+                                            </li>
+                                            <li className="flex gap-3 group items-center">
+                                                <a href={`tel:${branch.phone}`} className="w-8 h-8 rounded-lg bg-white/5 flex items-center justify-center text-milku-primary shrink-0 hover:bg-milku-primary hover:text-white transition-all">
+                                                    <Phone size={14} />
+                                                </a>
+                                                <a href={`tel:${branch.phone}`} className="text-[10px] font-bold text-white/70 group-hover:text-white transition-colors">
+                                                    +91 {String(branch.phone).replace(/\D/g, '').slice(-10)}
+                                                </a>
+                                            </li>
+                                        </div>
+                                        {branch.fssaiNumber && (
+                                            <li className="flex items-center gap-3 text-white/30 pt-2 border-t border-white/5">
+                                                <ShieldCheck size={16} className="text-milku-accent/50" />
+                                                <div className="flex flex-col">
+                                                    <span className="text-[7px] font-black tracking-widest uppercase">FSSAI License</span>
+                                                    <span className="text-[10px] font-black text-white/60 uppercase">{branch.fssaiNumber}</span>
+                                                </div>
+                                            </li>
+                                        )}
+                                    </ul>
                                 </div>
-                             </div>
+                            ))}
                         </div>
                     </div>
                 </div>

@@ -12,7 +12,8 @@ export const SettingsProvider = ({ children }) => {
     address: '22-A, Parmanand Industrial Society, Near Kharvarnagar BRTS Junction, U-M Road, Khatodara, Surat-395002',
     fssaiNumber: '10719014000677',
     mapEmbedUrl: '',
-    googleMapsLink: 'https://maps.app.goo.gl/8pdAN8voMJFbgXNg8'
+    googleMapsLink: 'https://maps.app.goo.gl/8pdAN8voMJFbgXNg8',
+    branches: []
   });
   
   const [loading, setLoading] = useState(true);

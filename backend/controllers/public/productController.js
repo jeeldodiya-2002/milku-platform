@@ -172,19 +172,19 @@ const updateProduct = async (req, res) => {
     if (updateData.removedImages && Array.isArray(updateData.removedImages)) {
       currentImages = currentImages.filter(img => {
         const filename = img.split('/').pop();
-        return !updateData.removedImages.includes(filename);
+        return !updateData.removedImages.includes(img) && !updateData.removedImages.includes(filename);
       });
 
       // If frontImage or backImage was removed, clear them or update them
       if (existingProduct.frontImage) {
         const frontFilename = existingProduct.frontImage.split('/').pop();
-        if (updateData.removedImages.includes(frontFilename)) {
+        if (updateData.removedImages.includes(existingProduct.frontImage) || updateData.removedImages.includes(frontFilename)) {
           updateData.frontImage = currentImages.length > 0 ? currentImages[0] : '';
         }
       }
       if (existingProduct.backImage) {
         const backFilename = existingProduct.backImage.split('/').pop();
-        if (updateData.removedImages.includes(backFilename)) {
+        if (updateData.removedImages.includes(existingProduct.backImage) || updateData.removedImages.includes(backFilename)) {
           updateData.backImage = '';
         }
       }

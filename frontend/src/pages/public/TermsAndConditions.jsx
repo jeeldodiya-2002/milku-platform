@@ -150,7 +150,11 @@ const TermsAndConditions = ({ splashFinished }) => {
                                 We strive to ensure the accuracy of all product data displayed.
                             </p>
                             <ul style={listStyle}>
-                                <li style={listItemStyle}>All Milku products are FSSAI certified under <strong>License No. {settings.fssaiNumber}</strong>.</li>
+                                {(settings.branches && settings.branches.length > 0 ? settings.branches : []).map((branch, idx) => (
+                                    <li key={idx} style={listItemStyle}>
+                                        All products associated with <strong>{branch.name}</strong> are FSSAI certified under <strong>License No. {branch.fssaiNumber || settings.fssaiNumber}</strong>.
+                                    </li>
+                                ))}
                                 <li style={listItemStyle}>Nutritional information provided is approximate and based on standard FSSAI testing guidelines.</li>
                                 <li style={listItemStyle}>Product availability is subject to seasonal changes and stock levels at our production units.</li>
                                 <li style={listItemStyle}>Jay Gayatri Dairy Products reserves the right to modify, discontinue, or update the product range without prior notice.</li>
@@ -222,12 +226,17 @@ const TermsAndConditions = ({ splashFinished }) => {
 
                         <section style={sectionStyle}>
                             <h2 style={h2Style}>10. Contact Us</h2>
-                            <div style={contactBoxStyle}>
-                                <p><strong>Jay Gayatri Dairy Products (Milku)</strong></p>
-                                <p>{settings.address}</p>
-                                <p style={{ marginTop: '10px' }}><strong>Phone:</strong> +91 {String(settings.whatsappNumber).replace(/\D/g, '').slice(-10)}</p>
-                                <p><strong>Email:</strong> {settings.email}</p>
-                                <p><strong>Website:</strong> {settings.websiteUrl?.replace('https://', '') || 'milkudairy.com'}</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                                {(settings.branches && settings.branches.length > 0 ? settings.branches : []).map((branch, idx) => (
+                                    <div key={idx} style={contactBoxStyle}>
+                                        <p><strong style={{ color: '#1A237E', textTransform: 'uppercase' }}>{branch.name}</strong> {branch.isMain && <span style={{ fontSize: '8px', background: '#1A237E', color: 'white', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px' }}>MAIN</span>}</p>
+                                        <p style={{ fontSize: '13px', margin: '10px 0' }}>{branch.address}</p>
+                                        <div style={{ marginTop: '15px', borderTop: '1px solid rgba(0,0,0,0.05)', paddingTop: '10px' }}>
+                                            <p style={{ fontSize: '12px' }}><strong>Phone:</strong> <a href={`tel:${branch.phone}`} style={linkStyle || { color: '#0096D6', fontWeight: '700' }}>+91 {String(branch.phone).replace(/\D/g, '').slice(-10)}</a></p>
+                                            <p style={{ fontSize: '12px' }}><strong>Email:</strong> <a href={`mailto:${branch.email}`} style={linkStyle || { color: '#0096D6', fontWeight: '700' }}>{branch.email}</a></p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </section>
 

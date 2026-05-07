@@ -207,20 +207,31 @@ const PrivacyPolicy = ({ splashFinished }) => {
                         <section style={sectionStyle}>
                             <h2 style={h2Style}>9. FSSAI Compliance</h2>
                             <p>
-                                As a responsible food business, we maintain strict compliance with FSSAI regulations. Our
-                                <strong> FSSAI License No. {settings.fssaiNumber}</strong> is displayed on all our digital and physical
-                                assets. All product information provided on this website matches the FSSAI-approved packaging standards.
+                                As a responsible food business, we maintain strict compliance with FSSAI regulations. Our business units operate under valid FSSAI licenses:
                             </p>
+                            <ul style={listStyle}>
+                                {(settings.branches && settings.branches.length > 0 ? settings.branches : []).map((branch, idx) => (
+                                    <li key={idx} style={listItemStyle}>
+                                        <strong>{branch.name}:</strong> License No. {branch.fssaiNumber || settings.fssaiNumber}
+                                    </li>
+                                ))}
+                            </ul>
+                            <p>All product information provided on this website matches the FSSAI-approved packaging standards.</p>
                         </section>
 
                         <section style={sectionStyle}>
                             <h2 style={h2Style}>10. Contact Us</h2>
-                            <div style={contactBoxStyle}>
-                                <p><strong>Jay Gayatri Dairy Products (Milku)</strong></p>
-                                <p>{settings.address}</p>
-                                <p style={{ marginTop: '10px' }}><strong>Phone:</strong> +91 {String(settings.whatsappNumber).replace(/\D/g, '').slice(-10)}</p>
-                                <p><strong>Email:</strong> {settings.email}</p>
-                                <p><strong>Website:</strong> {settings.websiteUrl?.replace('https://', '') || 'milkudairy.com'}</p>
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
+                                {(settings.branches && settings.branches.length > 0 ? settings.branches : []).map((branch, idx) => (
+                                    <div key={idx} style={contactBoxStyle}>
+                                        <p><strong style={{ color: '#1A237E', textTransform: 'uppercase' }}>{branch.name}</strong> {branch.isMain && <span style={{ fontSize: '8px', background: '#1A237E', color: 'white', padding: '2px 8px', borderRadius: '4px', marginLeft: '8px' }}>MAIN</span>}</p>
+                                        <p style={{ fontSize: '13px', margin: '10px 0' }}>{branch.address}</p>
+                                        <div style={{ marginTop: '15px', borderTop: '1px solid rgba(0,0,0,0.05)', paddingTop: '10px' }}>
+                                            <p style={{ fontSize: '12px' }}><strong>Phone:</strong> <a href={`tel:${branch.phone}`} style={linkStyle}>+91 {String(branch.phone).replace(/\D/g, '').slice(-10)}</a></p>
+                                            <p style={{ fontSize: '12px' }}><strong>Email:</strong> <a href={`mailto:${branch.email}`} style={linkStyle}>{branch.email}</a></p>
+                                        </div>
+                                    </div>
+                                ))}
                             </div>
                         </section>
 

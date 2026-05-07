@@ -34,7 +34,16 @@ const settingsSchema = new mongoose.Schema({
   defaultWhatsAppMessage: {
     type: String,
     default: "Hi, I want to enquire about Milku products."
-  }
+  },
+  branches: [{
+    name: { type: String, required: true, default: "Main Branch" },
+    address: { type: String, required: true },
+    email: { type: String, required: true },
+    phone: { type: String, required: true },
+    fssaiNumber: { type: String },
+    googleMapsLink: { type: String },
+    isMain: { type: Boolean, default: false }
+  }]
 }, { timestamps: true });
 
 module.exports = mongoose.model('Settings', settingsSchema);

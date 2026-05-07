@@ -455,10 +455,37 @@ const AddProduct = () => {
                           </button>
                        </div>
                     </div>
-                 </form>
-              )}
-           </AnimatePresence>
-        </div>
+                  </form>
+               )}
+            </AnimatePresence>
+
+            {/* GLOBAL PROCESSING OVERLAY */}
+            <AnimatePresence>
+               {loading && (
+                  <motion.div
+                     initial={{ opacity: 0 }}
+                     animate={{ opacity: 1 }}
+                     exit={{ opacity: 0 }}
+                     className="fixed inset-0 z-[20000] bg-[#0D1B3E]/10 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4 cursor-wait"
+                  >
+                     <div className="bg-white p-8 rounded-[40px] shadow-2xl flex flex-col items-center gap-6 border border-slate-100">
+                        <div className="relative">
+                           <div className="w-16 h-16 border-4 border-slate-100 rounded-full" />
+                           <motion.div 
+                               className="absolute inset-0 border-4 border-t-[#1565C0] border-r-transparent border-b-transparent border-l-transparent rounded-full"
+                               animate={{ rotate: 360 }}
+                               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                           />
+                        </div>
+                        <div className="text-center">
+                           <h3 className="text-sm font-black text-[#0D1B3E] uppercase italic tracking-tighter">Processing...</h3>
+                           <p className="text-[8px] font-black text-slate-400 uppercase tracking-[2px] mt-1">Syncing with Milku Engine</p>
+                        </div>
+                     </div>
+                  </motion.div>
+               )}
+            </AnimatePresence>
+         </div>
       </main>
 
       {/* UPGRADE WARNING MODAL */}

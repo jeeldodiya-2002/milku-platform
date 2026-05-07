@@ -980,7 +980,6 @@ const ManageCategories = () => {
                                           />
                                        </div>
                                     </div>
-
                                     {/* CONTROLS */}
                                     <div className="flex items-center gap-4 w-full lg:w-auto border-t lg:border-t-0 pt-6 lg:pt-0 border-slate-50">
                                        <button
@@ -988,7 +987,7 @@ const ManageCategories = () => {
                                           disabled={actionLoading}
                                           className={`flex-grow lg:flex-grow-0 flex items-center justify-center gap-3 px-6 py-4 rounded-2xl font-black text-[9px] uppercase tracking-widest transition-all ${p.isActive ? 'bg-[#25D366]/10 text-[#25D366] border border-[#25D366]/20' : 'bg-slate-100 text-slate-600 border border-slate-200'}`}
                                        >
-                                          <Power size={14} strokeWidth={3} /> {p.isActive ? 'Enabled' : 'Disabled'}
+                                          {actionLoading && editingId === p._id ? <RefreshCw className="animate-spin" size={14} /> : <Power size={14} strokeWidth={3} />} {p.isActive ? 'Enabled' : 'Disabled'}
                                        </button>
 
                                        {!selectedCategory.isMain ? (
@@ -996,10 +995,10 @@ const ManageCategories = () => {
                                              <button
                                                 onClick={saveQuickEdit}
                                                 disabled={actionLoading}
-                                                className="p-4 bg-[#25D366] text-white rounded-2xl shadow-lg hover:bg-[#1DA851] transition-all"
+                                                className="p-4 bg-[#25D366] text-white rounded-2xl shadow-lg hover:bg-[#1DA851] transition-all min-w-[52px] flex items-center justify-center"
                                                 title="Save Changes"
                                              >
-                                                <CheckCircle2 size={20} />
+                                                {actionLoading ? <RefreshCw className="animate-spin" size={20} /> : <CheckCircle2 size={20} />}
                                              </button>
                                           )
                                        ) : (
@@ -1435,9 +1434,36 @@ const ManageCategories = () => {
                   </motion.div>
                )}
             </AnimatePresence>
-         </main>
-      </div>
-   );
-};
+
+             {/* GLOBAL PROCESSING OVERLAY */}
+             <AnimatePresence>
+                {actionLoading && (
+                   <motion.div
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      exit={{ opacity: 0 }}
+                      className="fixed inset-0 z-[20000] bg-[#0D1B3E]/10 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4 cursor-wait"
+                   >
+                      <div className="bg-white p-8 rounded-[40px] shadow-2xl flex flex-col items-center gap-6 border border-slate-100">
+                         <div className="relative">
+                            <div className="w-16 h-16 border-4 border-slate-100 rounded-full" />
+                            <motion.div 
+                               className="absolute inset-0 border-4 border-t-[#1565C0] border-r-transparent border-b-transparent border-l-transparent rounded-full"
+                               animate={{ rotate: 360 }}
+                               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                            />
+                         </div>
+                         <div className="text-center">
+                            <h3 className="text-sm font-black text-[#0D1B3E] uppercase italic tracking-tighter">Processing...</h3>
+                            <p className="text-[8px] font-black text-slate-400 uppercase tracking-[2px] mt-1">Syncing with Milku Engine</p>
+                         </div>
+                      </div>
+                   </motion.div>
+                )}
+             </AnimatePresence>
+          </main>
+       </div>
+    );
+ };
 
 export default ManageCategories;

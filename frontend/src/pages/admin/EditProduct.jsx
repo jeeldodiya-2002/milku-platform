@@ -18,6 +18,7 @@ const EditProduct = () => {
   const [saving, setSaving] = useState(false);
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState('');
+  const [removedImages, setRemovedImages] = useState([]);
   
   const [formData, setFormData] = useState({
     name: '',
@@ -62,11 +63,12 @@ const EditProduct = () => {
           
           // Populate gallery from existing images
           if (p.images && p.images.length > 0) {
-             setGalleryPreviews(p.images.map(img => getImageUrl(img)));
+             setGalleryPreviews(p.images.map(img => ({ url: getImageUrl(img), isExisting: true, path: img })));
           } else if (p.frontImage) {
-             setGalleryPreviews([getImageUrl(p.frontImage)]);
+             setGalleryPreviews([{ url: getImageUrl(p.frontImage), isExisting: true, path: p.frontImage }]);
           }
 
+          setRemovedImages([]);
           // Auto-detect if it should be full view
           const currentCat = allCats.find(c => c.name === p.category);
           const hasFullDetails = p.frontImage || p.backImage || (p.availableSizes && p.availableSizes.length > 0);
@@ -135,6 +137,9 @@ const EditProduct = () => {
       
       if (isFullView) {
          data.append('availableSizes', JSON.stringify(sizes));
+         if (removedImages.length > 0) {
+            data.append('removedImages', JSON.stringify(removedImages));
+         }
          // Append only NEW files
          galleryFiles.forEach(file => {
             data.append('images', file);
@@ -249,7 +254,7 @@ const EditProduct = () => {
                                            return;
                                         }
                                         setGalleryFiles([...galleryFiles, ...selectedFiles]);
-                                        const newPreviews = selectedFiles.map(f => URL.createObjectURL(f));
+                                        const newPreviews = selectedFiles.map(f => ({ url: URL.createObjectURL(f), isExisting: false }));
                                         setGalleryPreviews([...galleryPreviews, ...newPreviews]);
                                      }} 
                                      className="absolute inset-0 opacity-0 cursor-pointer" 
@@ -258,30 +263,32 @@ const EditProduct = () => {
 
                                 <div className="grid grid-cols-2 gap-3 mt-4">
                                    <AnimatePresence>
-                                      {galleryPreviews.map((p, idx) => (
-                                         <motion.div 
-                                           key={idx}
-                                           initial={{ opacity: 0, scale: 0.8 }}
-                                           animate={{ opacity: 1, scale: 1 }}
-                                           exit={{ opacity: 0, scale: 0.8 }}
-                                           className="relative aspect-square bg-slate-50 rounded-xl border border-slate-100 overflow-hidden group"
-                                         >
-                                            <img src={p} className="w-full h-full object-cover p-1" alt="Preview" />
-                                            <button 
-                                              type="button"
-                                              onClick={() => {
-                                                 // Only remove if it's a NEWLY selected file
-                                                 // For existing images, we'd need a way to track deletions, 
-                                                 // but for now let's just allow clearing local previews
-                                                 setGalleryFiles(galleryFiles.filter((_, i) => i !== (idx - (galleryPreviews.length - galleryFiles.length))));
-                                                 setGalleryPreviews(galleryPreviews.filter((_, i) => i !== idx));
-                                              }}
-                                              className="absolute top-1 right-1 w-6 h-6 bg-red-500 text-white rounded-full flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity"
-                                            >
-                                               <X size={12} />
-                                            </button>
-                                         </motion.div>
-                                      ))}
+                                       {galleryPreviews.map((item, idx) => (
+                                          <motion.div 
+                                            key={idx}
+                                            initial={{ opacity: 0, scale: 0.8 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.8 }}
+                                            className="relative aspect-square bg-slate-50 rounded-xl border border-slate-100 overflow-hidden group"
+                                          >
+                                             <img src={item.url} className="w-full h-full object-cover p-1" alt="Preview" />
+                                             <button 
+                                               type="button"
+                                               onClick={() => {
+                                                  if (item.isExisting) {
+                                                     setRemovedImages([...removedImages, item.path]);
+                                                  } else {
+                                                     const fileIndex = idx - galleryPreviews.filter(p => p.isExisting).length;
+                                                     setGalleryFiles(galleryFiles.filter((_, i) => i !== fileIndex));
+                                                  }
+                                                  setGalleryPreviews(galleryPreviews.filter((_, i) => i !== idx));
+                                               }}
+                                               className="absolute inset-0 bg-red-500/80 opacity-0 group-hover:opacity-100 transition-all flex items-center justify-center text-white"
+                                             >
+                                                <Trash2 size={20} />
+                                             </button>
+                                          </motion.div>
+                                       ))}
                                    </AnimatePresence>
                                 </div>
                              </div>
@@ -442,6 +449,33 @@ const EditProduct = () => {
                  </form>
               )}
            </AnimatePresence>
+
+            {/* GLOBAL PROCESSING OVERLAY */}
+            <AnimatePresence>
+               {saving && (
+                  <motion.div
+                     initial={{ opacity: 0 }}
+                     animate={{ opacity: 1 }}
+                     exit={{ opacity: 0 }}
+                     className="fixed inset-0 z-[20000] bg-[#0D1B3E]/10 backdrop-blur-[2px] flex flex-col items-center justify-center gap-4 cursor-wait"
+                  >
+                     <div className="bg-white p-8 rounded-[40px] shadow-2xl flex flex-col items-center gap-6 border border-slate-100">
+                        <div className="relative">
+                           <div className="w-16 h-16 border-4 border-slate-100 rounded-full" />
+                           <motion.div 
+                               className="absolute inset-0 border-4 border-t-[#1565C0] border-r-transparent border-b-transparent border-l-transparent rounded-full"
+                               animate={{ rotate: 360 }}
+                               transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                           />
+                        </div>
+                        <div className="text-center">
+                           <h3 className="text-sm font-black text-[#0D1B3E] uppercase italic tracking-tighter">Processing...</h3>
+                           <p className="text-[8px] font-black text-slate-400 uppercase tracking-[2px] mt-1">Syncing with Milku Engine</p>
+                        </div>
+                     </div>
+                  </motion.div>
+               )}
+            </AnimatePresence>
         </div>
       </main>
 

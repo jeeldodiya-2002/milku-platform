@@ -167,29 +167,72 @@ const Contact = ({ splashFinished }) => {
                     </div>
                 </header>
 
-                <ScrollReveal className="grid md:grid-cols-3 gap-5 mb-12 max-w-4xl mx-auto">
-                    <InfoCard
-                        icon={Phone}
-                        label="Call Us"
-                        value={`+91 ${settings.whatsappNumber.slice(2)}`}
-                        href={`tel:${settings.whatsappNumber}`}
-                        delay={0.1}
-                    />
-                    <InfoCard
-                        icon={Mail}
-                        label="Email"
-                        value={settings.email}
-                        href={`mailto:${settings.email}`}
-                        delay={0.2}
-                    />
-                    <InfoCard
-                        icon={MapPin}
-                        label="Headquarters"
-                        value={settings.address}
-                        href={settings.googleMapsLink || "https://maps.app.goo.gl/8pdAN8voMJFbgXNg8"}
-                        delay={0.3}
-                    />
-                </ScrollReveal>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-20">
+                    {(settings.branches && settings.branches.length > 0 ? settings.branches : []).map((branch, idx) => (
+                        <motion.div 
+                            key={idx}
+                            initial={{ opacity: 0, y: 20 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true }}
+                            transition={{ delay: idx * 0.1, duration: 0.8 }}
+                            className={`bg-white/70 backdrop-blur-xl p-8 rounded-[40px] border transition-all duration-500 relative group overflow-hidden ${branch.isMain ? 'border-milku-primary shadow-2xl ring-8 ring-blue-50/50' : 'border-white shadow-xl hover:shadow-2xl'}`}
+                        >
+                            {branch.isMain && (
+                                <div className="absolute top-0 right-0 bg-milku-primary text-white px-6 py-2 rounded-bl-3xl text-[9px] font-black uppercase tracking-widest shadow-lg">
+                                    Main HQ
+                                </div>
+                            )}
+
+                            <div className="space-y-6">
+                                <div className="space-y-2">
+                                    <h3 className="text-xl font-black text-milku-secondary uppercase italic tracking-tight">{branch.name || "Our Presence"}</h3>
+                                    <div className="w-12 h-1 bg-milku-primary/20 rounded-full" />
+                                </div>
+
+                                <div className="space-y-5">
+                                    <a href={branch.googleMapsLink || "#"} target="_blank" rel="noopener noreferrer" className="flex gap-4 group/item">
+                                        <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-milku-primary shrink-0 group-hover/item:bg-milku-primary group-hover/item:text-white transition-all">
+                                            <MapPin size={18} />
+                                        </div>
+                                        <span className="text-[11px] font-bold text-slate-500 uppercase tracking-tight leading-relaxed italic group-hover/item:text-milku-secondary transition-colors">
+                                            {branch.address}
+                                        </span>
+                                    </a>
+
+                                    <div className="grid grid-cols-1 gap-4">
+                                        <a href={`mailto:${branch.email}`} className="flex items-center gap-4 group/item">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-milku-primary shrink-0 group-hover/item:bg-milku-primary group-hover/item:text-white transition-all">
+                                                <Mail size={18} />
+                                            </div>
+                                            <span className="text-[12px] font-black text-milku-secondary group-hover/item:text-milku-primary transition-colors tracking-tight uppercase">
+                                                {branch.email}
+                                            </span>
+                                        </a>
+
+                                        <a href={`tel:${branch.phone}`} className="flex items-center gap-4 group/item">
+                                            <div className="w-10 h-10 rounded-xl bg-slate-50 flex items-center justify-center text-milku-primary shrink-0 group-hover/item:bg-milku-primary group-hover/item:text-white transition-all">
+                                                <Phone size={18} />
+                                            </div>
+                                            <span className="text-[13px] font-black text-milku-secondary group-hover/item:text-milku-primary transition-colors tracking-tight">
+                                                +91 {String(branch.phone).replace(/\D/g, '').slice(-10)}
+                                            </span>
+                                        </a>
+                                    </div>
+                                    
+                                    {branch.fssaiNumber && (
+                                        <div className="pt-4 border-t border-slate-50 flex items-center gap-3">
+                                            <ShieldCheck size={16} className="text-milku-primary/40" />
+                                            <div className="flex flex-col">
+                                                <span className="text-[8px] font-black text-slate-400 uppercase tracking-widest">FSSAI ID</span>
+                                                <span className="text-[11px] font-black text-milku-secondary">{branch.fssaiNumber}</span>
+                                            </div>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </motion.div>
+                    ))}
+                </div>
 
                 <ScrollReveal
                     direction="up"
