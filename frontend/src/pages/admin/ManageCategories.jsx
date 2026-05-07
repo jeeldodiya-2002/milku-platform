@@ -256,7 +256,7 @@ const ManageCategories = () => {
 
       const incomplete = prods.filter(p => {
          const imageCount = (p.frontImage ? 1 : 0) + (p.backImage ? 1 : 0) + (p.images?.length || 0);
-         const hasImages = imageCount >= 2;
+         const hasImages = imageCount >= 1;
          const hasVariants = p.availableSizes && p.availableSizes.length > 0;
          return !hasImages || !hasVariants;
       });
@@ -450,7 +450,7 @@ const ManageCategories = () => {
                               <ShieldAlert size={32} />
                               <div className="text-left">
                                  <h2 className="text-2xl font-black text-[#0D1B3E] uppercase italic tracking-tighter leading-none">Required Data Terminal</h2>
-                                 <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mt-1">Images & Variants Mandatory for Card View</p>
+                                 <p className="text-[10px] font-black text-slate-600 uppercase tracking-widest mt-1">Images & Variants Mandatory for Main View</p>
                               </div>
                            </div>
                         </div>
@@ -478,7 +478,7 @@ const ManageCategories = () => {
                                           </div>
                                           <div className="text-center">
                                              <p className="text-[10px] font-black text-[#0D1B3E] uppercase tracking-widest">Upload Images</p>
-                                             <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest mt-1">Front & Back Recommended</p>
+                                             <p className="text-[8px] font-bold text-slate-600 uppercase tracking-widest mt-1">Minimum 1 High-Quality Image</p>
                                           </div>
                                        </div>
                                        <input
