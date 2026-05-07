@@ -34,7 +34,7 @@ const InteractiveTicker = ({ items, speed = 1 }) => {
                 // Auto-scroll logic
                 let nextX = currentX - (isHovered ? 0 : speed);
                 
-                // Real-time boundary wrapping (Infinite Loop)
+                // Real-time boundary wrapping (Infinite Loop) with Jitter Guard
                 if (nextX <= -contentWidth * 3) nextX += contentWidth;
                 if (nextX >= -contentWidth) nextX -= contentWidth;
                 
@@ -97,8 +97,9 @@ const ProductSlide = ({ product, index, isDragging }) => {
         <motion.div
             ref={cardRef}
             whileHover={{ y: -5 }}
+            whileTap={{ scale: 0.98 }}
             onClick={handleProductClick}
-            className="group relative flex flex-col rounded-[32px] bg-white border border-slate-100 shadow-[0_6px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_56px_rgba(0,100,200,0.08)] transition-all duration-500 will-change-transform min-w-[280px] md:min-w-[340px] cursor-pointer"
+            className="group relative flex flex-col rounded-[32px] bg-white border border-slate-100 shadow-[0_6px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_56px_rgba(0,100,200,0.08)] transition-all duration-500 will-change-transform min-w-[280px] md:min-w-[340px] cursor-pointer overflow-hidden"
         >
             <div className="absolute top-4 md:top-5 left-4 md:left-5 z-10">
                 <span className="inline-flex items-center gap-1 md:gap-1.5 bg-milku-secondary/6 text-milku-secondary text-[7px] md:text-[9px] font-black uppercase tracking-[2px] md:tracking-[4px] px-2.5 py-1 md:px-3 md:py-1.5 rounded-full border border-milku-secondary/10">
@@ -108,24 +109,24 @@ const ProductSlide = ({ product, index, isDragging }) => {
                 </span>
             </div>
             <div className="relative flex items-end justify-center pt-12 pb-4 px-6 min-h-[220px] overflow-hidden">
-                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,150,214,0.03)_0%,transparent_70%)] group-hover:scale-150 transition-transform duration-1000" />
+                <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,150,214,0.03)_0%,transparent_70%)] md:group-hover:scale-150 transition-transform duration-1000" />
                 <img 
                     src={getImageUrl(product.frontImage || product.image || product.images?.[0])} 
                     alt={product.name}
-                    className="relative z-10 h-32 md:h-44 w-auto object-contain transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3" 
+                    className="relative z-10 h-32 md:h-44 w-auto object-contain transition-all duration-700 ease-out md:group-hover:scale-110 md:group-hover:-rotate-3" 
                 />
             </div>
             <div className="flex-1 px-6 pb-6 pt-2 flex flex-col justify-between">
                 <div className="space-y-1 mb-4">
                     <p className="text-[9px] font-black text-milku-primary uppercase tracking-[5px]">{product.category}</p>
-                    <h3 className="text-lg md:text-xl font-black text-milku-secondary uppercase tracking-tight leading-tight italic group-hover:text-milku-primary transition-colors line-clamp-1">{product.name}</h3>
+                    <h3 className="text-lg md:text-xl font-black text-milku-secondary uppercase tracking-tight leading-tight italic md:group-hover:text-milku-primary transition-colors line-clamp-1">{product.name}</h3>
                     <p className="text-[9px] font-bold text-slate-500 uppercase tracking-widest line-clamp-1">
                         {product.availableSizes?.join(', ') || product.packaging}
                     </p>
                 </div>
-                <div className="inline-flex items-center justify-between w-full text-[10px] font-black uppercase tracking-[3px] text-milku-secondary group-hover:text-milku-primary transition-colors duration-300 pt-4 border-t border-slate-100">
+                <div className="inline-flex items-center justify-between w-full text-[10px] font-black uppercase tracking-[3px] text-milku-secondary md:group-hover:text-milku-primary transition-colors duration-300 pt-4 border-t border-slate-100">
                     <span>EXPLORE PRODUCT</span>
-                    <span className="w-8 h-8 rounded-full bg-milku-secondary group-hover:bg-milku-primary flex items-center justify-center transition-colors duration-300 shadow">
+                    <span className="w-8 h-8 rounded-full bg-milku-secondary md:group-hover:bg-milku-primary flex items-center justify-center transition-colors duration-300 shadow">
                         <ArrowRight size={12} className="text-white" />
                     </span>
                 </div>
