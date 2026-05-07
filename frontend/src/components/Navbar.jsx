@@ -37,13 +37,14 @@ const Navbar = () => {
             dropdown: [
                 { name: 'Our Legacy', path: '/about' },
                 { name: 'Contact Us', path: '/contact' },
+                { name: 'Reviews', path: '/reviews' },
                 { name: 'Privacy Policy', path: '/privacy-policy' },
                 { name: 'Terms & Conditions', path: '/terms-conditions' }
             ] 
         }
     ];
 
-    const isCompanyActive = ['/about', '/contact', '/privacy-policy', '/terms-conditions'].includes(location.pathname);
+    const isCompanyActive = ['/about', '/contact', '/reviews', '/privacy-policy', '/terms-conditions'].includes(location.pathname);
 
     return (
         <>

@@ -20,10 +20,11 @@ const CATEGORY_UI_CONFIG = {
     'Penda': { id: 'peda', icon: Cookie, color: '#E8571A', packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
     'Barfi': { id: 'barfi', icon: LayoutGrid, color: '#8B5CF6', packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
     'Halwa': { id: 'halwa', icon: Cake, color: '#FBC31F', packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Boxes' },
-    'Cruz': { id: 'cruz', icon: Sparkles, color: '#EC4899', packageType: 'fixed', packages: ['Standard'], unit: 'Units' },
+    'Cruz': { id: 'cruz', icon: Sparkles, color: '#EC4899', packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Units' },
     'Mava': { id: 'mava', icon: Package, color: '#FF9800', packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Packets' },
     'Chikki': { id: 'chikki', icon: Cookie, color: '#D86FA0', packageType: 'fixed', packages: ['250g', '500g'], unit: 'Boxes' },
     'Special Items': { id: 'special', icon: Gift, color: '#F59E0B', packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
+    'Other Items': { id: 'other', icon: Archive, color: '#64748B', packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Units' },
 };
 
 const BulkOrder = ({ splashFinished }) => {
@@ -61,7 +62,7 @@ const BulkOrder = ({ splashFinished }) => {
                 icon: Package, 
                 color: '#64748B', 
                 packageType: 'fixed', 
-                packages: ['Standard'], 
+                packages: ['250g', '500g', '1kg'], 
                 unit: 'Units' 
             };
 

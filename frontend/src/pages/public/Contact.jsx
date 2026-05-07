@@ -2,7 +2,7 @@ import React, { useState, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useSettings } from '../../context/SettingsContext';
 import CinematicEnvironment from '../../components/CinematicEnvironment';
-import { Phone, Mail, MapPin, ArrowRight, CheckCircle2, User, MessageSquare, HelpCircle, ChevronDown } from 'lucide-react';
+import { Phone, Mail, MapPin, ArrowRight, CheckCircle2, User, MessageSquare, HelpCircle, ChevronDown, ShieldCheck } from 'lucide-react';
 import { NavLink } from 'react-router-dom';
 import PageReveal from '../../components/PageReveal';
 import { TextReveal, ScrollReveal } from '../../components/RevealComponents';
