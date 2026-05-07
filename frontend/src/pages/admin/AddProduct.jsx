@@ -194,19 +194,20 @@ const AddProduct = () => {
                  </div>
               </div>
               
-              <div className="flex items-center gap-3">
+               <div className="flex items-center gap-3">
                   <div className={`flex items-center gap-2 px-4 py-2 rounded-xl text-[9px] font-black uppercase tracking-widest border ${isFullView ? 'bg-yellow-50 text-[#FFC107] border-yellow-200' : 'bg-blue-50 text-[#1565C0] border-blue-200'}`}>
                      {isFullView ? <Sparkles size={12} /> : <Layers size={12} />} {isFullView ? 'Card View Active' : 'Standard View'}
                   </div>
                   
-                  {/* ONLY ALLOW TOGGLE IF IT'S A MAIN CATEGORY OR WE WANT TO OVERRIDE */}
-                  <button 
-                    type="button"
-                    onClick={handleUpgradeToggle}
-                    className={`flex items-center gap-3 px-6 py-3 rounded-2xl font-black text-[10px] uppercase tracking-widest transition-all ${isFullView ? 'bg-[#0D1B3E] text-white' : 'bg-white border border-slate-200 text-slate-400 hover:border-[#1565C0] hover:text-[#1565C0]'}`}
-                  >
-                     {isFullView ? 'Reset to Simple' : 'Upgrade to Card View'}
-                  </button>
+                  {!isFullView && (
+                     <button 
+                       type="button"
+                       onClick={handleUpgradeToggle}
+                       className="flex items-center gap-3 px-6 py-3 rounded-2xl bg-white border border-slate-200 text-slate-400 font-black text-[10px] uppercase tracking-widest hover:border-[#1565C0] hover:text-[#1565C0] transition-all shadow-sm"
+                     >
+                        Upgrade to Card View
+                     </button>
+                  )}
                </div>
            </div>
 

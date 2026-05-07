@@ -1216,6 +1216,12 @@ const ManageCategories = () => {
                                  <h4 className="text-xl font-black text-green-600 uppercase italic tracking-tighter">All Systems Ready!</h4>
                                  <p className="text-[9px] font-bold text-green-600/60 uppercase tracking-widest">Products now meet catalog standards.</p>
                               </div>
+                              
+                              <div className="bg-yellow-50 border border-yellow-100 p-4 rounded-2xl">
+                                 <p className="text-[9px] font-black text-yellow-700 uppercase tracking-widest leading-relaxed">
+                                    ⚠️ Warning: This conversion is permanent. Once a category is promoted to Main Status, it cannot be reverted to simple view.
+                                 </p>
+                              </div>
                               <button
                                  onClick={() => {
                                     setShowValidationError(false);
