@@ -278,12 +278,18 @@ const ManageCategories = () => {
 
       // PRE-FILL EXISTING IMAGES
       const existingImages = [];
-      if (p.frontImage) existingImages.push(getImageUrl(p.frontImage));
-      if (p.backImage) existingImages.push(getImageUrl(p.backImage));
+      if (p.frontImage) {
+         existingImages.push({ url: getImageUrl(p.frontImage), isExisting: true, path: p.frontImage });
+      }
+      if (p.backImage) {
+         existingImages.push({ url: getImageUrl(p.backImage), isExisting: true, path: p.backImage });
+      }
       if (p.images && p.images.length > 0) {
          p.images.forEach(img => {
             const url = getImageUrl(img);
-            if (!existingImages.includes(url)) existingImages.push(url);
+            if (!existingImages.find(ex => ex.url === url)) {
+               existingImages.push({ url, isExisting: true, path: img });
+            }
          });
       }
       setWizardPreviews(existingImages);
@@ -338,14 +344,15 @@ const ManageCategories = () => {
 
             // Re-validate category to see if more products need work
             const catToValidate = convertingCategory || categories.find(c => c.name === wizardProduct.category);
-            if (catToValidate) {
+            if (catToValidate && convertingCategory) {
                const v = validateCategoryForMain(catToValidate.name, updatedProducts);
                setValidationData(v);
-               setShowValidationError(true); // Always show validation list after saving
+               setShowValidationError(true); 
             }
 
             setWizardProduct(null);
             setWizardRemovedImages([]);
+            if (!convertingCategory) setConvertingCategory(null); // Cleanup
          }
       } catch (err) {
          setError(err.response?.data?.message || "Failed to save product data");
@@ -389,6 +396,7 @@ const ManageCategories = () => {
             refreshCategories();
             setShowImageWarning(false);
             setPendingCategory(null);
+            setConvertingCategory(null);
          }
       } catch (err) {
          alert("Failed to update category status");
@@ -488,7 +496,11 @@ const ManageCategories = () => {
                                           onChange={(e) => {
                                              const files = Array.from(e.target.files);
                                              setWizardImages([...wizardImages, ...files]);
-                                             const newPreviews = files.map(f => URL.createObjectURL(f));
+                                             const newPreviews = files.map(f => ({
+                                                url: URL.createObjectURL(f),
+                                                isExisting: false,
+                                                file: f
+                                             }));
                                              setWizardPreviews([...wizardPreviews, ...newPreviews]);
                                           }}
                                           className="hidden"
@@ -496,21 +508,16 @@ const ManageCategories = () => {
                                     </label>
 
                                     <div className="grid grid-cols-2 gap-3">
-                                       {wizardPreviews.map((p, i) => (
+                                       {wizardPreviews.map((item, i) => (
                                           <div key={i} className="relative aspect-[4/3] rounded-2xl overflow-hidden border border-slate-100 bg-slate-50 p-1 group">
-                                             <img src={p} crossOrigin="anonymous" className="w-full h-full object-contain rounded-xl" alt="Preview" />
+                                             <img src={item.url} crossOrigin="anonymous" className="w-full h-full object-contain rounded-xl" alt="Preview" />
                                              <button
                                                 onClick={() => {
                                                    const previewToRemove = wizardPreviews[i];
-                                                   // If it's an existing image (contains getImageUrl or localhost/upload)
-                                                   if (previewToRemove.includes('uploads') || previewToRemove.includes('http')) {
-                                                      // Extract the filename from URL
-                                                      const filename = previewToRemove.split('/').pop();
-                                                      setWizardRemovedImages([...wizardRemovedImages, filename]);
+                                                   if (previewToRemove.isExisting) {
+                                                      setWizardRemovedImages([...wizardRemovedImages, previewToRemove.path]);
                                                    } else {
-                                                      // It's a new upload, remove from wizardImages
-                                                      const newImgIndex = wizardPreviews.filter((p, idx) => idx < i && !(p.includes('uploads') || p.includes('http'))).length;
-                                                      setWizardImages(wizardImages.filter((_, idx) => idx !== newImgIndex));
+                                                      setWizardImages(wizardImages.filter(f => f !== previewToRemove.file));
                                                    }
                                                    setWizardPreviews(wizardPreviews.filter((_, idx) => idx !== i));
                                                 }}
@@ -1240,7 +1247,10 @@ const ManageCategories = () => {
 
                         {validationData.count > 0 && (
                            <button
-                              onClick={() => setShowValidationError(false)}
+                               onClick={() => {
+                                  setShowValidationError(false);
+                                  setConvertingCategory(null);
+                               }}
                               className="w-full bg-slate-50 text-slate-600 font-black py-4 rounded-2xl uppercase tracking-widest text-[10px] hover:bg-slate-100 transition-all"
                            >
                               Close Wizard
