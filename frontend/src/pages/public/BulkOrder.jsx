@@ -1,45 +1,102 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
 import { useSettings } from '../../context/SettingsContext';
-import { MessageCircle, Check, Zap, ArrowRight, Building2, User, Phone, MapPin, Package, ChevronLeft, ChevronRight, LayoutGrid, Droplet, GlassWater, IceCream, Coffee, Cookie, Cake, Flame, Sparkles, Gift, Archive, CircleDashed, ShieldCheck, Truck, Headset, Clock, Trash2, ShoppingBag } from 'lucide-react';
+import { getProducts } from '../../services/api';
+import { MessageCircle, Check, Zap, ArrowRight, Building2, User, Phone, MapPin, Package, ChevronLeft, ChevronRight, LayoutGrid, Droplet, GlassWater, IceCream, Coffee, Cookie, Cake, Flame, Sparkles, Gift, Archive, CircleDashed, ShieldCheck, Truck, Headset, Clock, Trash2, ShoppingBag, Loader2 } from 'lucide-react';
 import PageReveal from '../../components/PageReveal';
 import CinematicEnvironment from '../../components/CinematicEnvironment';
 import SEO from '../../components/SEO';
 import { trackPartnerEnquiry, trackWhatsAppClick } from '../../utils/analytics';
 
-const PRODUCT_FAMILIES = [
-    { id: 'buttermilk', name: 'Buttermilk/Chass', icon: GlassWater, color: '#1565C0', items: ['Fresh Chass'], packageType: 'fixed', packages: ['500ml'], unit: 'Packets' },
-    { id: 'curd', name: 'Curd/Dahi', icon: CircleDashed, color: '#4CAF50', items: ['Fresh Dahi'], packageType: 'fixed', packages: ['5kg'], unit: 'Buckets' },
-    { id: 'paneer', name: 'Paneer', icon: LayoutGrid, color: '#FF9800', items: ['Malai Paneer', 'Medium Fat Paneer', 'Low Fat Soft Paneer', 'Low Fat Hard Paneer'], packageType: 'multi', packages: ['1kg', '5kg'], unit: 'Packets' },
-    { id: 'ghee', name: 'Ghee', icon: Droplet, color: '#FFC107', items: ['A2 Desi Cow Ghee', 'Buffalo Ghee'], packageType: 'multi', packages: ['500ml', '1000ml', '5kg', '15kg'], unit: 'Units' },
-    { id: 'shrikhand', name: 'Shrikhand', icon: IceCream, color: '#FBC31F', items: ['Mattho', 'Rajbhog', 'Mango', 'American Dry Fruit', 'Kesar Elaichi', 'Elaichi', 'Kaju Draksh', 'Kesar Dry Fruit', 'Badam Pista'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Cups' },
-    { id: 'lassi', name: 'Lassi', icon: GlassWater, color: '#D86FA0', items: ['Kesar Dry Fruit', 'Mava', 'Rose', 'Mango', 'Cold Coco'], packageType: 'fixed', packages: ['200ml', '500ml', '1L'], unit: 'Bottles' },
-    { id: 'basundi', name: 'Basundi', icon: Coffee, color: '#FF9800', items: ['Plane', 'Kesar Dry Fruit', 'Kesar Angur', 'Anjir', 'Chandni Bahar', 'Sitafal', 'Mango Delight', 'Mango Fruit Plaza'], packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Cups' },
-    { id: 'peda', name: 'Penda', icon: Cookie, color: '#E8571A', items: ['White', 'Kesar Elaichi', 'Thabdi', 'Milku Special', 'mix mithai'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
-    { id: 'barfi', name: 'Barfi', icon: LayoutGrid, color: '#8B5CF6', items: ['Gulkand', 'Anjir', 'Kalakand', 'Pista', 'Chocolate', 'Kesar', 'Rose', 'Akhrot', 'Compound'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
-    { id: 'halwa', name: 'Halwa', icon: Cake, color: '#FBC31F', items: ['Bombay', 'Dry Fruit', 'Dudhi', 'Kaju Akhrot', 'Gajar'], packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Boxes' },
-    { id: 'cruz', name: 'Cruz', icon: Sparkles, color: '#EC4899', items: ['Raja Rani', 'Volcano', 'Madhu Malti', 'Red Velvet'], packageType: 'fixed', packages: ['Standard'], unit: 'Units' },
-    { id: 'mava', name: 'Mava', icon: Package, color: '#FF9800', items: ['Sweet Mava', 'Molo Mavo', 'Cow Mava', 'Lal Mava'], packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Packets' },
-    { id: 'chikki', name: 'Chikki', icon: Cookie, color: '#D86FA0', items: ['Khajur Dry Fruit', 'Anjir Dry Fruit'], packageType: 'fixed', packages: ['250g', '500g'], unit: 'Boxes' },
-    { id: 'special', name: 'Special Items', icon: Gift, color: '#F59E0B', items: ['Premium Kaju Katri', 'Mix Dry Fruit Mithai', 'Kesar Kaju Katri', 'Kaju Kasata', 'Kaju Anjir Role', 'Strawberry Kaju Katri', 'Sangam Kaju Katri', 'Cadbury Ball', 'Roasted Almond Ball', 'Orange Bite', 'Blueberry Bite', 'Coconut Ball', 'Kaju Gajar', 'Meva Bite', 'Dry Fruit Laddu (Sugar Free)', 'Kaju Pan', 'Choco Bite'], packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
-];
-
-const ALL_ITEMS = PRODUCT_FAMILIES.flatMap(f => f.items.map(item => ({ 
-    id: `${f.id}-${item}`, 
-    name: item, 
-    categoryId: f.id, 
-    category: f.name,
-    unit: f.unit || (f.units ? f.units[0] : 'kg'),
-    packages: f.packages || [],
-    packageType: f.packageType
-})));
+// ─── UI CONFIGURATION ENGINE ──────────────────────────────────────────────
+const CATEGORY_UI_CONFIG = {
+    'Buttermilk/Chass': { id: 'buttermilk', icon: GlassWater, color: '#1565C0', packageType: 'fixed', packages: ['500ml'], unit: 'Packets' },
+    'Curd/Dahi': { id: 'curd', icon: CircleDashed, color: '#4CAF50', packageType: 'fixed', packages: ['5kg'], unit: 'Buckets' },
+    'Paneer': { id: 'paneer', icon: LayoutGrid, color: '#FF9800', packageType: 'multi', packages: ['1kg', '5kg'], unit: 'Packets' },
+    'Ghee': { id: 'ghee', icon: Droplet, color: '#FFC107', packageType: 'multi', packages: ['500ml', '1000ml', '5kg', '15kg'], unit: 'Units' },
+    'Shrikhand': { id: 'shrikhand', icon: IceCream, color: '#FBC31F', packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Cups' },
+    'Lassi': { id: 'lassi', icon: GlassWater, color: '#D86FA0', packageType: 'fixed', packages: ['200ml', '500ml', '1L'], unit: 'Bottles' },
+    'Basundi': { id: 'basundi', icon: Coffee, color: '#FF9800', packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Cups' },
+    'Penda': { id: 'peda', icon: Cookie, color: '#E8571A', packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
+    'Barfi': { id: 'barfi', icon: LayoutGrid, color: '#8B5CF6', packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
+    'Halwa': { id: 'halwa', icon: Cake, color: '#FBC31F', packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Boxes' },
+    'Cruz': { id: 'cruz', icon: Sparkles, color: '#EC4899', packageType: 'fixed', packages: ['Standard'], unit: 'Units' },
+    'Mava': { id: 'mava', icon: Package, color: '#FF9800', packageType: 'fixed', packages: ['500g', '1kg'], unit: 'Packets' },
+    'Chikki': { id: 'chikki', icon: Cookie, color: '#D86FA0', packageType: 'fixed', packages: ['250g', '500g'], unit: 'Boxes' },
+    'Special Items': { id: 'special', icon: Gift, color: '#F59E0B', packageType: 'fixed', packages: ['250g', '500g', '1kg'], unit: 'Boxes' },
+};
 
 const BulkOrder = ({ splashFinished }) => {
-    const { getWhatsAppLink } = useSettings();
-    const [activeCategory, setActiveCategory] = useState('buttermilk');
-    const [selectedProducts, setSelectedProducts] = useState([]); // Array of IDs
-    const [config, setConfig] = useState({}); // { itemId: { qty, size } }
+    const { getWhatsAppLink, categories: dbCategories, loading: settingsLoading } = useSettings();
+    const [products, setProducts] = useState([]);
+    const [loadingProducts, setLoadingProducts] = useState(true);
+    const [activeCategory, setActiveCategory] = useState('');
+    const [selectedProducts, setSelectedProducts] = useState([]); 
+    const [config, setConfig] = useState({}); 
     const [form, setForm] = useState({ company: '', contact: '', city: '', phone: '', notes: '' });
+
+    // ─── DATA ENGINE ────────────────────────────────────────────────────────
+    useEffect(() => {
+        const fetchAll = async () => {
+            try {
+                const res = await getProducts();
+                if (res.data.success) {
+                    setProducts(res.data.data.filter(p => p.isActive !== false));
+                }
+            } catch (err) {
+                console.error("Failed to fetch products for Bulk Order:", err);
+            } finally {
+                setLoadingProducts(false);
+            }
+        };
+        fetchAll();
+    }, []);
+
+    const productFamilies = useMemo(() => {
+        if (!dbCategories.length || !products.length) return [];
+
+        return dbCategories.map(cat => {
+            const uiConfig = CATEGORY_UI_CONFIG[cat.name] || { 
+                id: cat._id, 
+                icon: Package, 
+                color: '#64748B', 
+                packageType: 'fixed', 
+                packages: ['Standard'], 
+                unit: 'Units' 
+            };
+
+            const catProducts = products.filter(p => p.category === cat.name);
+            if (catProducts.length === 0) return null;
+
+            return {
+                ...uiConfig,
+                name: cat.name,
+                items: catProducts.map(p => ({
+                    id: p._id,
+                    name: p.name,
+                    packages: p.availableSizes?.length > 0 ? p.availableSizes : uiConfig.packages
+                }))
+            };
+        }).filter(Boolean);
+    }, [dbCategories, products]);
+
+    const allItems = useMemo(() => {
+        return productFamilies.flatMap(f => f.items.map(item => ({
+            id: item.id,
+            name: item.name,
+            categoryId: f.id,
+            category: f.name,
+            unit: f.unit,
+            packages: item.packages,
+            packageType: f.packageType
+        })));
+    }, [productFamilies]);
+
+    useEffect(() => {
+        if (productFamilies.length > 0 && !activeCategory) {
+            setActiveCategory(productFamilies[0].id);
+        }
+    }, [productFamilies, activeCategory]);
     
     const [orderId, setOrderId] = useState(() => {
         const ts = Date.now().toString(36).toUpperCase();
@@ -110,7 +167,7 @@ const BulkOrder = ({ splashFinished }) => {
         // Group selected items by category
         const grouped = {};
         selectedProducts.forEach(id => {
-            const item = ALL_ITEMS.find(p => p.id === id);
+            const item = allItems.find(p => p.id === id);
             if (!grouped[item.category]) grouped[item.category] = [];
             grouped[item.category].push({ ...item, ...config[id] });
         });
@@ -157,6 +214,17 @@ const BulkOrder = ({ splashFinished }) => {
         [0, 0.25, 0.5, 0.75, 1],
         ["#ffffff", "#BFDBFE", "#A7F3D0", "#1A237E", "#1A237E"]
     );
+
+    if (loadingProducts || settingsLoading) {
+        return (
+            <div className="min-h-screen bg-white flex items-center justify-center">
+                <div className="flex flex-col items-center gap-6">
+                    <Loader2 size={48} className="text-[#1565C0] animate-spin" />
+                    <div className="text-[10px] font-mono font-black uppercase tracking-[4px] text-slate-400">Initializing Terminal...</div>
+                </div>
+            </div>
+        );
+    }
 
     return (
         <motion.div 
@@ -206,8 +274,8 @@ const BulkOrder = ({ splashFinished }) => {
                             </div>
                             <div className="flex gap-4">
                                 {[
-                                    { val: '14', label: 'Categories' },
-                                    { val: '76', label: 'Products' },
+                                    { val: productFamilies.length, label: 'Categories' },
+                                    { val: products.length, label: 'Products' },
                                     { val: '24/7', label: 'Support' }
                                 ].map((s, i) => (
                                     <div key={i} className="bg-white/80 backdrop-blur-xl border border-slate-100 p-5 rounded-3xl min-w-[110px] text-center shadow-lg">
@@ -248,7 +316,7 @@ const BulkOrder = ({ splashFinished }) => {
                                 
                                 {/* Category Switcher */}
                                 <div className="px-8 py-4 border-b border-slate-100 bg-white/30 overflow-x-auto no-scrollbar flex gap-2 will-change-transform translate-z-0">
-                                    {PRODUCT_FAMILIES.map(cat => {
+                                    {productFamilies.map(cat => {
                                         const Icon = cat.icon;
                                         const isActive = activeCategory === cat.id;
                                         return (
@@ -270,7 +338,7 @@ const BulkOrder = ({ splashFinished }) => {
                                 {/* Product Grid */}
                                 <div className="p-10 overflow-y-auto max-h-[600px] custom-scrollbar will-change-transform translate-z-0">
                                     <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-3 gap-6">
-                                        {ALL_ITEMS.filter(p => p.categoryId === activeCategory).map(item => {
+                                        {allItems.filter(p => p.categoryId === activeCategory).map(item => {
                                             const isSelected = selectedProducts.includes(item.id);
                                             const configData = config[item.id] || {};
                                             return (
@@ -410,7 +478,8 @@ const BulkOrder = ({ splashFinished }) => {
                                         <div className="space-y-6">
                                             {Object.entries(
                                                 selectedProducts.reduce((acc, id) => {
-                                                    const item = ALL_ITEMS.find(p => p.id === id);
+                                                    const item = allItems.find(p => p.id === id);
+                                                    if (!item) return acc;
                                                     if (!acc[item.category]) acc[item.category] = [];
                                                     acc[item.category].push({ ...item, ...config[id] });
                                                     return acc;
