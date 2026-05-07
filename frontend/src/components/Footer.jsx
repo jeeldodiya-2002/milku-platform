@@ -16,10 +16,10 @@ const Footer = () => {
     return (
         <footer className="bg-milku-secondary text-white pt-10 pb-6 overflow-hidden selection:bg-milku-primary">
             <div className="max-w-[1500px] mx-auto px-6">
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8 pb-8 border-b border-white/10">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-8 pb-8 border-b border-white/10">
                     
                     {/* COLUMN 1: BRAND */}
-                    <div className="space-y-4">
+                    <div className="lg:col-span-3 space-y-4">
                         <div className="flex items-center gap-4">
                             <div className="bg-white p-2.5 rounded-2xl shadow-xl">
                                 <img src="/logo.jpeg" alt="Milku" className="h-8 w-auto object-contain" />
@@ -40,7 +40,7 @@ const Footer = () => {
                     </div>
 
                     {/* COLUMN Quick Links */}
-                    <div className="space-y-6">
+                    <div className="lg:col-span-2 space-y-6">
                         <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-milku-accent">DIRECTORY</h4>
                         <ul className="space-y-5">
                             {[
@@ -62,7 +62,7 @@ const Footer = () => {
                     </div>
 
                     {/* COLUMN Collections */}
-                    <div className="space-y-6">
+                    <div className="lg:col-span-2 space-y-6">
                         <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-milku-accent">COLLECTIONS</h4>
                         <ul className="space-y-5">
                             {categories.filter(c => c.isMain === true || String(c.isMain) === 'true').slice(0, 5).map((cat) => (
@@ -79,11 +79,14 @@ const Footer = () => {
                     </div>
 
                     {/* COLUMN Contact */}
-                    <div className="lg:col-span-1 space-y-8">
+                    <div className="lg:col-span-5 space-y-8">
                         <h4 className="text-[11px] font-black uppercase tracking-[0.4em] text-milku-accent">OUR PRESENCE</h4>
                         
-                        <div className="space-y-10 max-h-[400px] overflow-y-auto pr-4 custom-scrollbar">
-                            {(settings.branches && settings.branches.length > 0 ? settings.branches : []).map((branch, idx) => (
+                        <div className="grid grid-cols-1 xl:grid-cols-2 gap-x-12 gap-y-10">
+                            {(settings.branches && settings.branches.length > 0 
+                                ? [...settings.branches].sort((a, b) => (a.isMain === b.isMain ? 0 : a.isMain ? 1 : -1)) 
+                                : []
+                            ).map((branch, idx) => (
                                 <div key={idx} className="space-y-4 border-l-2 border-white/5 pl-6 relative">
                                     {branch.isMain && (
                                         <div className="absolute -left-[2px] top-0 w-[2px] h-8 bg-milku-primary shadow-[0_0_15px_rgba(21,101,192,0.8)]" />
