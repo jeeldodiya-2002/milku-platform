@@ -255,7 +255,8 @@ const ManageCategories = () => {
       if (prods.length === 0) return { success: true };
 
       const incomplete = prods.filter(p => {
-         const hasImages = (p.frontImage && p.backImage) || (p.images && p.images.length >= 2);
+         const imageCount = (p.frontImage ? 1 : 0) + (p.backImage ? 1 : 0) + (p.images?.length || 0);
+         const hasImages = imageCount >= 2;
          const hasVariants = p.availableSizes && p.availableSizes.length > 0;
          return !hasImages || !hasVariants;
       });
