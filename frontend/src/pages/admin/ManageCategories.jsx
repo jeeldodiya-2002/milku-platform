@@ -129,13 +129,13 @@ const ManageCategories = () => {
       setQuickForm({ name: p.name, shortDescription: p.shortDescription });
    };
 
-   const handleQuickUpdate = async (id) => {
-      if (actionLoading) return;
+   const saveQuickEdit = async () => {
+      if (!editingId || actionLoading) return;
       setActionLoading(true);
       try {
-         const res = await updateProduct(id, quickForm);
+         const res = await updateProduct(editingId, quickForm);
          if (res.data.success) {
-            setAllProducts(allProducts.map(p => p._id === id ? { ...p, ...quickForm } : p));
+            setAllProducts(allProducts.map(p => p._id === editingId ? { ...p, ...quickForm } : p));
             setEditingId(null);
          }
       } catch (err) {
