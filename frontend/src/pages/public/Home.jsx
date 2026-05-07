@@ -48,9 +48,11 @@ const ProductSlide = ({ product, index }) => {
             </div>
             <div className="relative flex items-end justify-center pt-12 pb-4 px-6 min-h-[220px] overflow-hidden">
                 <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(0,150,214,0.03)_0%,transparent_70%)] group-hover:scale-150 transition-transform duration-1000" />
-                <img src={getImageUrl(product.frontImage || product.images?.[0])} alt={product.name}
-                    crossOrigin="anonymous"
-                    className="relative z-10 h-32 md:h-44 w-auto object-contain transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3" />
+                <img 
+                    src={getImageUrl(product.frontImage || product.image || product.images?.[0])} 
+                    alt={product.name}
+                    className="relative z-10 h-32 md:h-44 w-auto object-contain transition-all duration-700 ease-out group-hover:scale-110 group-hover:-rotate-3" 
+                />
             </div>
             <div className="flex-1 px-6 pb-6 pt-2 flex flex-col justify-between">
                 <div className="space-y-1 mb-4">
