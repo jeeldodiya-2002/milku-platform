@@ -1,6 +1,5 @@
 import React, { useRef, useState, useEffect } from 'react';
-import { motion, useScroll, useTransform } from 'framer-motion';
-
+import { motion, useScroll, useTransform, useMotionValue, useAnimationFrame } from 'framer-motion';
 import { MASTER_CONFIG } from '../../masterConfig';
 import { ArrowRight, MessageCircle, Star, Zap, ShieldCheck, Award, Leaf } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
@@ -14,12 +13,67 @@ import PageReveal from '../../components/PageReveal';
 import { TextReveal, ScrollReveal } from '../../components/RevealComponents';
 import SEO from '../../components/SEO';
 import { trackWhatsAppClick, trackContactClick } from '../../utils/analytics';
+import { getProducts, getImageUrl } from '../../services/api';
 
 gsap.registerPlugin(ScrollTrigger);
 
+// ─── INTERACTIVE TICKER ────────────────────────────────────────────────────────
+const InteractiveTicker = ({ items, speed = 1 }) => {
+    const x = useMotionValue(0);
+    const containerRef = useRef(null);
+    const contentRef = useRef(null);
+    const [isHovered, setIsHovered] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
 
+    useAnimationFrame((t, delta) => {
+        if (!isHovered && !isDragging) {
+            const currentX = x.get();
+            const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
+            
+            if (contentWidth > 0) {
+                let nextX = currentX - speed;
+                if (nextX <= -contentWidth) nextX += contentWidth;
+                x.set(nextX);
+            }
+        }
+    });
 
-import { getProducts, getImageUrl } from '../../services/api';
+    return (
+        <motion.div
+            ref={containerRef}
+            className="flex gap-6 md:gap-10 w-fit"
+            style={{ x }}
+            drag="x"
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={(e, info) => {
+                setIsDragging(false);
+                // Snap back logic if needed, but for ticker we just let it be
+                const currentX = x.get();
+                const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
+                if (currentX > 0) x.set(currentX - contentWidth);
+                if (currentX <= -contentWidth * 2) x.set(currentX + contentWidth);
+            }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
+        >
+            <div ref={contentRef} className="flex gap-6 md:gap-10 shrink-0">
+                {items.map((prod, i) => (
+                    <ProductSlide key={`set1-${prod._id || i}`} product={prod} index={i} />
+                ))}
+            </div>
+            <div className="flex gap-6 md:gap-10 shrink-0">
+                {items.map((prod, i) => (
+                    <ProductSlide key={`set2-${prod._id || i}`} product={prod} index={i} />
+                ))}
+            </div>
+            <div className="flex gap-6 md:gap-10 shrink-0">
+                {items.map((prod, i) => (
+                    <ProductSlide key={`set3-${prod._id || i}`} product={prod} index={i} />
+                ))}
+            </div>
+        </motion.div>
+    );
+};
 
 // ─── TRUST BADGE ──────────────────────────────────────────────────────────────
 const TrustBadge = ({ icon: Icon, label }) => (
@@ -287,43 +341,14 @@ const Home = ({ splashFinished }) => {
                                 Traditional dairy essentials crafted for the modern household.
                             </p>
                         </div>
-                        {/* LIVE PRODUCT TICKER — Auto-scrolling marquee */}
-                        <div className="relative -mx-4 md:-mx-6 lg:-mx-20 overflow-hidden group/ticker py-10">
-                            <motion.div 
-                                className="flex gap-6 md:gap-10 w-fit"
-                                animate={{ x: [0, -1 * (mainProducts.length * 380)] }}
-                                transition={{ 
-                                    duration: mainProducts.length * 5, 
-                                    repeat: Infinity, 
-                                    ease: "linear",
-                                    pauseOnHover: true 
-                                }}
-                                style={{ display: 'flex' }}
-                            >
-                                {/* First set of products */}
-                                {mainProducts.map((prod, i) => (
-                                    <div key={`set1-${prod._id || i}`} className="shrink-0">
-                                        <ProductSlide product={prod} index={i} />
-                                    </div>
-                                ))}
-                                {/* Duplicated set for seamless loop */}
-                                {mainProducts.map((prod, i) => (
-                                    <div key={`set2-${prod._id || i}`} className="shrink-0">
-                                        <ProductSlide product={prod} index={i} />
-                                    </div>
-                                ))}
-                                {/* Triplicated set for ultra-wide screens */}
-                                {mainProducts.map((prod, i) => (
-                                    <div key={`set3-${prod._id || i}`} className="shrink-0">
-                                        <ProductSlide product={prod} index={i} />
-                                    </div>
-                                ))}
-                            </motion.div>
+                        {/* LIVE PRODUCT TICKER — Draggable & Auto-scrolling marquee */}
+                        <div className="relative -mx-4 md:-mx-6 lg:-mx-20 overflow-hidden group/ticker py-10 cursor-grab active:cursor-grabbing">
+                            <InteractiveTicker items={mainProducts} speed={0.8} />
                             
                             {/* Scroll Indicator Hint */}
-                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30 group-hover/ticker:opacity-60 transition-opacity">
+                            <div className="absolute bottom-2 left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30 group-hover/ticker:opacity-60 transition-opacity pointer-events-none">
                                 <div className="w-12 h-[1px] bg-milku-secondary" />
-                                <span className="text-[8px] font-black uppercase tracking-[4px] text-milku-secondary">Live Inventory Stream</span>
+                                <span className="text-[8px] font-black uppercase tracking-[4px] text-milku-secondary">Drag to Explore • Live Stream</span>
                                 <div className="w-12 h-[1px] bg-milku-secondary" />
                             </div>
                         </div>

@@ -1,6 +1,146 @@
 import React, { useState, useEffect, useMemo, useRef } from 'react';
 import { useSearchParams, useNavigate } from 'react-router-dom';
-import { motion, AnimatePresence, useScroll, useTransform } from 'framer-motion';
+import { motion, AnimatePresence, useScroll, useTransform, useMotionValue, useAnimationFrame } from 'framer-motion';
+
+// ─── INTERACTIVE CATEGORY TICKER ──────────────────────────────────────────────
+const InteractiveCategoryTicker = ({ items, activeCategory, onCategoryClick, speed = 0.5 }) => {
+  const x = useMotionValue(0);
+  const containerRef = useRef(null);
+  const contentRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  useAnimationFrame((t, delta) => {
+    if (!isHovered && !isDragging) {
+      const currentX = x.get();
+      const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
+      if (contentWidth > 0) {
+        let nextX = currentX - speed;
+        if (nextX <= -contentWidth) nextX += contentWidth;
+        x.set(nextX);
+      }
+    }
+  });
+
+  const renderItems = (setLabel) => (
+    <div key={setLabel} className="flex items-center shrink-0">
+      {items.map((cat, idx) => (
+        <div key={`${setLabel}-${idx}`} className="flex items-center">
+          <button
+            onClick={() => onCategoryClick(cat.name.toLowerCase().replace(/[\s\/]+/g, '-'))}
+            className={`ticker-item ${activeCategory === cat.name.toLowerCase().replace(/[\s\/]+/g, '-') ? 'active' : ''}`}
+          >
+            {cat.name}
+          </button>
+          <span className="ticker-separator">◆</span>
+        </div>
+      ))}
+    </div>
+  );
+
+  return (
+    <motion.div
+      ref={containerRef}
+      className="flex w-fit cursor-grab active:cursor-grabbing py-3"
+      style={{ x }}
+      drag="x"
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => {
+        setIsDragging(false);
+        const currentX = x.get();
+        const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
+        if (currentX > 0) x.set(currentX - contentWidth);
+        if (currentX <= -contentWidth * 2) x.set(currentX + contentWidth);
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div ref={contentRef} className="flex">{renderItems('set1')}</div>
+      {renderItems('set2')}
+      {renderItems('set3')}
+    </motion.div>
+  );
+};
+
+// ─── INTERACTIVE PRODUCT TICKER ──────────────────────────────────────────────
+const InteractiveProductTicker = ({ items, onProductClick, speed = 0.6 }) => {
+  const x = useMotionValue(0);
+  const containerRef = useRef(null);
+  const contentRef = useRef(null);
+  const [isHovered, setIsHovered] = useState(false);
+  const [isDragging, setIsDragging] = useState(false);
+
+  useAnimationFrame((t, delta) => {
+    if (!isHovered && !isDragging) {
+      const currentX = x.get();
+      const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
+      if (contentWidth > 0) {
+        let nextX = currentX - speed;
+        if (nextX <= -contentWidth) nextX += contentWidth;
+        x.set(nextX);
+      }
+    }
+  });
+
+  const renderProduct = (p, idx, setLabel) => {
+    const hasImage = !!p.frontImage;
+    const rImg = hasImage ? getImageUrl(p.frontImage) : null;
+    const rName = p.name || '';
+    const config = CATEGORY_UI_CONFIG[p.category] || { icon: Package, color: '#64748B' };
+    const Icon = config.icon;
+
+    return (
+      <motion.div
+        key={`${setLabel}-${p._id}-${idx}`}
+        whileTap={{ scale: 0.96 }}
+        onClick={() => !isDragging && onProductClick(p)}
+        className="group/r shrink-0 w-36 cursor-pointer space-y-3 mr-6 transition-transform duration-300"
+      >
+        <div className="w-36 aspect-[4/3] rounded-[28px] bg-white flex flex-col items-center justify-center p-3 shadow-sm border border-slate-100 transition-all duration-700 overflow-hidden relative">
+          {hasImage ? (
+            <img src={rImg} alt={rName} crossOrigin="anonymous" className="relative z-10 w-full h-full object-contain" />
+          ) : (
+            <>
+              <div className="absolute inset-0 opacity-5" style={{ backgroundColor: config.color }} />
+              <Icon size={32} color={config.color} className="opacity-40 mb-2" />
+              <span className="text-[9px] font-bold text-slate-500 uppercase tracking-widest text-center px-2">{p.category}</span>
+            </>
+          )}
+        </div>
+        <p className="text-[11px] md:text-xs font-black text-slate-600 capitalize tracking-tight text-center group-hover/r:text-milku-primary transition-colors duration-300 line-clamp-2 leading-tight px-1">{rName}</p>
+      </motion.div>
+    );
+  };
+
+  return (
+    <motion.div
+      ref={containerRef}
+      className="flex w-fit cursor-grab active:cursor-grabbing pb-4"
+      style={{ x }}
+      drag="x"
+      onDragStart={() => setIsDragging(true)}
+      onDragEnd={() => {
+        setIsDragging(false);
+        const currentX = x.get();
+        const contentWidth = contentRef.current?.offsetWidth / 3 || 0;
+        if (currentX > 0) x.set(currentX - contentWidth);
+        if (currentX <= -contentWidth * 2) x.set(currentX + contentWidth);
+      }}
+      onMouseEnter={() => setIsHovered(true)}
+      onMouseLeave={() => setIsHovered(false)}
+    >
+      <div ref={contentRef} className="flex">
+        {items.map((p, i) => renderProduct(p, i, 'set1'))}
+      </div>
+      <div className="flex">
+        {items.map((p, i) => renderProduct(p, i, 'set2'))}
+      </div>
+      <div className="flex">
+        {items.map((p, i) => renderProduct(p, i, 'set3'))}
+      </div>
+    </motion.div>
+  );
+};
 import { useSettings } from '../../context/SettingsContext';
 import { getProducts, getCategories, getImageUrl } from '../../services/api';
 import CinematicEnvironment from '../../components/CinematicEnvironment';
@@ -555,11 +695,12 @@ const ProductDetailModal = ({ item, category, isOpen, onClose, setSelectedItem, 
                     <div
                       className="w-full overflow-hidden"
                     >
-                      <div className="hidden md:flex gap-6 overflow-x-auto no-scrollbar pb-4 pt-2">
-                        {relatedImageProducts.map((p, idx) => renderRelatedProduct(p, idx))}
-                      </div>
-                      <div className={`md:hidden flex ticker-content related-ticker-scrolling ${relatedTickerPaused ? 'ticker-paused' : ''}`}>
-                        {[...relatedImageProducts, ...relatedImageProducts].map((p, idx) => renderRelatedProduct(p, idx))}
+                      <div className="w-fit">
+                        <InteractiveProductTicker 
+                          items={relatedImageProducts} 
+                          onProductClick={(p) => setSelectedItem(p)}
+                          speed={0.7}
+                        />
                       </div>
                     </div>
                   </div>
@@ -722,18 +863,12 @@ const Products = ({ splashFinished }) => {
           <ScrollReveal className="main-content-area flex-1">
             {/* MOBILE TICKER - HIDDEN ON DESKTOP/TABLET (MD+) */}
             <div className="md:hidden sticky top-[var(--header-height)] z-40 bg-white border-b border-milku-primary/10 overflow-hidden">
-              <div className="ticker-container no-scrollbar">
-                <div className="ticker-content ticker-scrolling-slow">
-                  {[...categories, ...categories].map((cat, idx) => (
-                    <div key={idx} className="flex items-center">
-                      <button onClick={() => handleCategoryChange(cat.name.toLowerCase().replace(/[\s\/]+/g, '-'))} className={`ticker-item ${activeCategory === cat.name.toLowerCase().replace(/[\s\/]+/g, '-') ? 'active' : ''}`}>
-                        {cat.name}
-                      </button>
-                      <span className="ticker-separator">◆</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
+              <InteractiveCategoryTicker 
+                items={categories} 
+                activeCategory={activeCategory} 
+                onCategoryClick={handleCategoryChange} 
+                speed={0.4}
+              />
             </div>
 
             <div className="max-w-[1000px] mx-auto px-4 md:px-12 pt-4 md:pt-6 pb-12">
