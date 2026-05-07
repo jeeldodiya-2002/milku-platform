@@ -3,7 +3,7 @@ import { motion, useScroll, useTransform, useMotionValue, useAnimationFrame } fr
 import { MASTER_CONFIG } from '../../masterConfig';
 import { ArrowRight, MessageCircle, Star, Zap, ShieldCheck, Award, Leaf } from 'lucide-react';
 import { Helmet } from 'react-helmet-async';
-import { NavLink } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import CinematicEnvironment from '../../components/CinematicEnvironment';
 import gsap from 'gsap';
 import { ScrollTrigger } from 'gsap/ScrollTrigger';
@@ -46,7 +46,12 @@ const InteractiveTicker = ({ items, speed = 1 }) => {
     const renderSet = (id) => (
         <div key={id} className="flex gap-6 md:gap-10 shrink-0">
             {items.map((prod, i) => (
-                <ProductSlide key={`${id}-${prod._id || i}`} product={prod} index={i} />
+                <ProductSlide 
+                    key={`${id}-${prod._id || i}`} 
+                    product={prod} 
+                    index={i} 
+                    isDragging={isDragging}
+                />
             ))}
         </div>
     );
@@ -78,14 +83,22 @@ const TrustBadge = ({ icon: Icon, label }) => (
 );
 
 // ─── PRODUCT CARD ─────────────────────────────────────────────────────────────
-const ProductSlide = ({ product, index }) => {
+const ProductSlide = ({ product, index, isDragging }) => {
     const cardRef = useRef();
+    const navigate = useNavigate();
+
+    const handleProductClick = () => {
+        if (isDragging) return;
+        const categorySlug = (product.category || '').toLowerCase().replace(/[\s\/]+/g, '-');
+        navigate(`/products?category=${categorySlug}`);
+    };
     
     return (
         <motion.div
             ref={cardRef}
             whileHover={{ y: -5 }}
-            className="group relative flex flex-col rounded-[32px] bg-white border border-slate-100 shadow-[0_6px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_56px_rgba(0,100,200,0.08)] transition-all duration-500 will-change-transform min-w-[280px] md:min-w-[340px]"
+            onClick={handleProductClick}
+            className="group relative flex flex-col rounded-[32px] bg-white border border-slate-100 shadow-[0_6px_32px_rgba(0,0,0,0.05)] hover:shadow-[0_20px_56px_rgba(0,100,200,0.08)] transition-all duration-500 will-change-transform min-w-[280px] md:min-w-[340px] cursor-pointer"
         >
             <div className="absolute top-4 md:top-5 left-4 md:left-5 z-10">
                 <span className="inline-flex items-center gap-1 md:gap-1.5 bg-milku-secondary/6 text-milku-secondary text-[7px] md:text-[9px] font-black uppercase tracking-[2px] md:tracking-[4px] px-2.5 py-1 md:px-3 md:py-1.5 rounded-full border border-milku-secondary/10">
@@ -110,13 +123,12 @@ const ProductSlide = ({ product, index }) => {
                         {product.availableSizes?.join(', ') || product.packaging}
                     </p>
                 </div>
-                <NavLink to="/products"
-                    className="inline-flex items-center justify-between w-full text-[10px] font-black uppercase tracking-[3px] text-milku-secondary hover:text-milku-primary transition-colors duration-300 pt-4 border-t border-slate-100">
+                <div className="inline-flex items-center justify-between w-full text-[10px] font-black uppercase tracking-[3px] text-milku-secondary group-hover:text-milku-primary transition-colors duration-300 pt-4 border-t border-slate-100">
                     <span>EXPLORE PRODUCT</span>
                     <span className="w-8 h-8 rounded-full bg-milku-secondary group-hover:bg-milku-primary flex items-center justify-center transition-colors duration-300 shadow">
                         <ArrowRight size={12} className="text-white" />
                     </span>
-                </NavLink>
+                </div>
             </div>
         </motion.div>
     );
