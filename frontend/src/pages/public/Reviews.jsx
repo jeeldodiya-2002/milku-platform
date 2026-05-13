@@ -77,8 +77,8 @@ const ReviewCard = ({ review, index }) => {
                                 <ShieldCheck size={14} className="text-blue-500" />
                             )}
                         </h4>
-                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2">
-                            {review.googleEmail} • {date}
+                        <span className="text-[10px] font-bold text-slate-400 uppercase tracking-widest flex items-center gap-2 flex-wrap">
+                            <a href={`mailto:${review.googleEmail}`} className="hover:text-milku-primary transition-colors underline decoration-milku-primary/20">{review.googleEmail}</a> • {date}
                         </span>
                     </div>
                 </div>

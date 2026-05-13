@@ -79,14 +79,14 @@ const ManageReviews = () => {
                     </div>
 
                     <div className="flex gap-4">
-                        <div className="relative">
+                        <div className="relative w-full md:w-auto">
                             <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-400" size={16} />
                             <input 
                                 type="text"
                                 placeholder="Search by name, email or content..."
                                 value={filter}
                                 onChange={(e) => setFilter(e.target.value)}
-                                className="bg-white border border-slate-200 rounded-2xl h-12 pl-12 pr-6 text-sm font-bold text-slate-700 focus:border-milku-primary outline-none transition-all w-[300px]"
+                                className="bg-white border border-slate-200 rounded-2xl h-12 pl-12 pr-6 text-sm font-bold text-slate-700 focus:border-milku-primary outline-none transition-all w-full md:w-[300px]"
                             />
                         </div>
                     </div>
@@ -164,9 +164,11 @@ const ManageReviews = () => {
                                             <p className="text-sm font-medium text-slate-600 italic leading-relaxed max-w-3xl">
                                                 "{review.reviewText}"
                                             </p>
-                                            <div className="flex gap-6 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
+                                            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 text-[10px] font-bold text-slate-400 uppercase tracking-widest">
                                                 <span className="flex items-center gap-1.5"><Clock size={12} /> {new Date(review.submittedAt).toLocaleString()}</span>
-                                                <span className="flex items-center gap-1.5"><User size={12} /> {review.googleEmail}</span>
+                                                <a href={`mailto:${review.googleEmail}`} className="flex items-center gap-1.5 hover:text-milku-primary transition-colors">
+                                                    <User size={12} /> {review.googleEmail}
+                                                </a>
                                             </div>
                                         </div>
                                     </div>
