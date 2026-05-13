@@ -74,17 +74,21 @@ const InteractiveTicker = ({ items, speed = 1 }) => {
 // ─── REVIEW TICKER ───────────────────────────────────────────────────────────
 const ReviewTicker = ({ items, speed = 0.6 }) => {
     const x = useMotionValue(0);
+    const containerRef = useRef(null);
     const contentRef = useRef(null);
     const [isHovered, setIsHovered] = useState(false);
+    const [isDragging, setIsDragging] = useState(false);
 
-    useAnimationFrame(() => {
-        const currentX = x.get();
-        const contentWidth = contentRef.current?.offsetWidth / 5 || 0;
-        if (contentWidth > 0) {
-            let nextX = currentX - (isHovered ? 0 : speed);
-            if (nextX <= -contentWidth * 3) nextX += contentWidth;
-            if (nextX >= -contentWidth) nextX -= contentWidth;
-            x.set(nextX);
+    useAnimationFrame((t, delta) => {
+        if (!isDragging) {
+            const currentX = x.get();
+            const contentWidth = contentRef.current?.offsetWidth / 5 || 0;
+            if (contentWidth > 0) {
+                let nextX = currentX - (isHovered ? 0 : speed);
+                if (nextX <= -contentWidth * 3) nextX += contentWidth;
+                if (nextX >= -contentWidth) nextX -= contentWidth;
+                x.set(nextX);
+            }
         }
     });
 
@@ -98,8 +102,12 @@ const ReviewTicker = ({ items, speed = 0.6 }) => {
 
     return (
         <motion.div
-            className="flex w-fit"
+            ref={containerRef}
+            className="flex w-fit cursor-grab active:cursor-grabbing"
             style={{ x }}
+            drag="x"
+            onDragStart={() => setIsDragging(true)}
+            onDragEnd={() => setIsDragging(false)}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
@@ -449,8 +457,13 @@ const Home = ({ splashFinished }) => {
                             </div>
                             <NavLink to="/reviews" className="text-[10px] font-black text-white uppercase tracking-[4px] border-b-2 border-white/20 pb-1 hover:border-white transition-all">View All Reviews</NavLink>
                         </div>
-                        <div className="relative -mx-20">
+                        <div className="relative -mx-20 group/rev-ticker cursor-grab active:cursor-grabbing">
                             <ReviewTicker items={topReviews} />
+                            <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30 group-hover/rev-ticker:opacity-60 transition-opacity pointer-events-none">
+                                <div className="w-12 h-[1px] bg-white" />
+                                <span className="text-[8px] font-black uppercase tracking-[4px] text-white">Drag to Explore • Live voices</span>
+                                <div className="w-12 h-[1px] bg-white" />
+                            </div>
                         </div>
                     </ScrollReveal>
                 )}
