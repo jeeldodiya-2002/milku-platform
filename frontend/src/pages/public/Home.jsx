@@ -103,7 +103,7 @@ const ReviewTicker = ({ items, speed = 0.6 }) => {
     return (
         <motion.div
             ref={containerRef}
-            className="flex w-fit cursor-grab active:cursor-grabbing"
+            className="flex w-fit"
             style={{ x }}
             drag="x"
             onDragStart={() => setIsDragging(true)}
@@ -457,7 +457,7 @@ const Home = ({ splashFinished }) => {
                             </div>
                             <NavLink to="/reviews" className="text-[10px] font-black text-white uppercase tracking-[4px] border-b-2 border-white/20 pb-1 hover:border-white transition-all">View All Reviews</NavLink>
                         </div>
-                        <div className="relative -mx-20 group/rev-ticker cursor-grab active:cursor-grabbing">
+                        <div className="relative -mx-20 overflow-hidden group/rev-ticker cursor-grab active:cursor-grabbing">
                             <ReviewTicker items={topReviews} />
                             <div className="absolute bottom-[-40px] left-1/2 -translate-x-1/2 flex items-center gap-3 opacity-30 group-hover/rev-ticker:opacity-60 transition-opacity pointer-events-none">
                                 <div className="w-12 h-[1px] bg-white" />
