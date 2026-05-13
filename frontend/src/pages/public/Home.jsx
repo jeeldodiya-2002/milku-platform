@@ -82,12 +82,12 @@ const ReviewTicker = ({ items, speed = 0.6 }) => {
     useAnimationFrame((t, delta) => {
         if (!isDragging) {
             const currentX = x.get();
-            const contentWidth = contentRef.current?.offsetWidth / 5 || 0;
+            // Increased sets to 10 for maximum coverage on all screens
+            const contentWidth = contentRef.current?.offsetWidth / 10 || 0;
             if (contentWidth > 0) {
                 let nextX = currentX - (isHovered ? 0 : speed);
                 
-                // Optimized loop: Keep x within [0, -contentWidth]
-                // This ensures s1 is always the starting point and loops seamlessly to s2
+                // Keep the ticker within a healthy range [0, -contentWidth]
                 if (nextX <= -contentWidth) nextX += contentWidth;
                 if (nextX > 0) nextX -= contentWidth;
                 
@@ -116,7 +116,7 @@ const ReviewTicker = ({ items, speed = 0.6 }) => {
             onMouseLeave={() => setIsHovered(false)}
         >
             <div ref={contentRef} className="flex">
-                {['s1', 's2', 's3', 's4', 's5'].map(renderSet)}
+                {['s1', 's2', 's3', 's4', 's5', 's6', 's7', 's8', 's9', 's10'].map(renderSet)}
             </div>
         </motion.div>
     );
