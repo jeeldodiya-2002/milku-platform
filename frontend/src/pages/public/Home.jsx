@@ -85,15 +85,19 @@ const ReviewTicker = ({ items, speed = 0.6 }) => {
             const contentWidth = contentRef.current?.offsetWidth / 5 || 0;
             if (contentWidth > 0) {
                 let nextX = currentX - (isHovered ? 0 : speed);
-                if (nextX <= -contentWidth * 3) nextX += contentWidth;
-                if (nextX >= -contentWidth) nextX -= contentWidth;
+                
+                // Optimized loop: Keep x within [0, -contentWidth]
+                // This ensures s1 is always the starting point and loops seamlessly to s2
+                if (nextX <= -contentWidth) nextX += contentWidth;
+                if (nextX > 0) nextX -= contentWidth;
+                
                 x.set(nextX);
             }
         }
     });
 
     const renderSet = (id) => (
-        <div key={id} className="flex gap-6 shrink-0">
+        <div key={id} className="flex gap-6 shrink-0 pr-6">
             {items.map((review, i) => (
                 <ReviewSlide key={`${id}-${review._id || i}`} review={review} />
             ))}
@@ -111,7 +115,7 @@ const ReviewTicker = ({ items, speed = 0.6 }) => {
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
         >
-            <div ref={contentRef} className="flex gap-6">
+            <div ref={contentRef} className="flex">
                 {['s1', 's2', 's3', 's4', 's5'].map(renderSet)}
             </div>
         </motion.div>
