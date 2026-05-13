@@ -111,6 +111,7 @@ const Reviews = () => {
     const [stats, setStats] = useState(null);
     const [loading, setLoading] = useState(true);
     const [pagination, setPagination] = useState({ page: 1, pages: 1 });
+    const [filterType, setFilterType] = useState('recent'); // 'recent' or 'top'
     
     // Form State
     const [formData, setFormData] = useState({
@@ -128,12 +129,13 @@ const Reviews = () => {
 
     useEffect(() => {
         fetchReviews();
-    }, [pagination.page]);
+    }, [pagination.page, filterType]);
 
     const fetchReviews = async () => {
         try {
             setLoading(true);
-            const response = await axios.get(`${import.meta.env.VITE_API_URL}/reviews?page=${pagination.page}&limit=6`);
+            const minRatingQuery = filterType === 'top' ? '&minRating=4' : '';
+            const response = await axios.get(`${import.meta.env.VITE_API_URL}/reviews?page=${pagination.page}&limit=6${minRatingQuery}`);
             if (response.data.success) {
                 setReviews(response.data.data);
                 setStats(response.data.stats);
@@ -401,12 +403,24 @@ const Reviews = () => {
                         {/* Feed Filter/Sort (Visual only for now) */}
                         <div className="flex flex-wrap items-center justify-between gap-6 bg-white p-6 rounded-[32px] border border-slate-100 shadow-sm">
                             <div className="flex items-center gap-6">
-                                <div className="flex items-center gap-2 text-[10px] font-black text-milku-primary uppercase tracking-widest border-b-2 border-milku-primary/20 pb-1">
+                                <button 
+                                    onClick={() => {
+                                        setFilterType('recent');
+                                        setPagination(p => ({ ...p, page: 1 }));
+                                    }}
+                                    className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all pb-1 border-b-2 ${filterType === 'recent' ? 'text-milku-primary border-milku-primary/20' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
+                                >
                                     <Filter size={12} /> Most Recent
-                                </div>
-                                <div className="flex items-center gap-2 text-[10px] font-black text-slate-300 uppercase tracking-widest cursor-not-allowed">
+                                </button>
+                                <button 
+                                    onClick={() => {
+                                        setFilterType('top');
+                                        setPagination(p => ({ ...p, page: 1 }));
+                                    }}
+                                    className={`flex items-center gap-2 text-[10px] font-black uppercase tracking-widest transition-all pb-1 border-b-2 ${filterType === 'top' ? 'text-milku-primary border-milku-primary/20' : 'text-slate-300 border-transparent hover:text-slate-400'}`}
+                                >
                                     <Star size={12} /> Top Rated
-                                </div>
+                                </button>
                             </div>
                             <div className="relative">
                                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 text-slate-300" size={14} />

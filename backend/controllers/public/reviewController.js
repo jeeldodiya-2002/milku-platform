@@ -12,14 +12,18 @@ exports.getReviews = async (req, res) => {
         const page = parseInt(req.query.page) || 1;
         const limit = parseInt(req.query.limit) || 6;
         const skip = (page - 1) * limit;
+        
+        // Handle Filtering
+        const minRating = parseInt(req.query.minRating) || 0;
+        const query = minRating > 0 ? { rating: { $gte: minRating } } : {};
 
         // Fetch reviews - SORT BY RATING FIRST (5 to 1) then by date
-        const reviews = await Review.find()
+        const reviews = await Review.find(query)
             .sort({ rating: -1, submittedAt: -1 })
             .skip(skip)
             .limit(limit);
 
-        const totalReviews = await Review.countDocuments();
+        const totalReviews = await Review.countDocuments(query);
 
         // Calculate Stats
         const stats = await Review.aggregate([
