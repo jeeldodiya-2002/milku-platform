@@ -7,6 +7,7 @@ import { WeatherProvider } from './context/WeatherContext';
 import { ThemeProvider } from './context/ThemeContext';
 import { SettingsProvider } from './context/SettingsContext';
 import { AuthProvider, useAuth } from './context/AuthContext';
+import { Analytics } from "@vercel/analytics/react";
 
 // Components
 import Navbar from './components/Navbar';
@@ -167,6 +168,7 @@ function AppContent({ showSplash, handleSplashDone, splashFinished }) {
       <ThemeProvider>
         <LanguageProvider>
           <div className="relative w-full overflow-hidden">
+            <Analytics />
             <CookieConsent />
             <AnimatePresence mode="wait">
               {showSplash && <SplashScreen key="splash" onComplete={handleSplashDone} />}
