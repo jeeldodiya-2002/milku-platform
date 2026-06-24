@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken');
-const { v4: uuidv4 } = require('uuid');
+const { randomUUID: uuidv4 } = require('crypto');
 const Admin = require('../../models/AdminModel');
 
 // @desc    Admin Passphrase Login
