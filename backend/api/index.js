@@ -3,18 +3,14 @@ const mongoose = require('mongoose');
 const connectDB = require('../config/db.js');
 const { connectRedis } = require('../config/redis.js');
 
-let isConnected = false;
-
 module.exports = async (req, res) => {
-    if (!isConnected) {
-        // Connect MongoDB if not already connected
-        if (mongoose.connection.readyState !== 1) {
-            await connectDB();
-        }
-        // Connect Redis
-        await connectRedis();
-        isConnected = true;
+    // Connect MongoDB if not already connected (0 = disconnected, 1 = connected, 2 = connecting, 3 = disconnecting)
+    if (mongoose.connection.readyState !== 1 && mongoose.connection.readyState !== 2) {
+        await connectDB();
     }
+    
+    // Connect Redis (connectRedis internally checks if it's already open)
+    await connectRedis();
 
     return app(req, res);
 };

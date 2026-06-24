@@ -7,9 +7,11 @@ const helmet = require('helmet');
 const compression = require('compression');
 const http = require('http');
 const connectDB = require('./config/db');
-const { connectRedis } = require('./config/redis');
+const { connectRedis, redisClient } = require('./config/redis');
 const { initSocket } = require('./config/socket');
 const rateLimit = require('express-rate-limit');
+const { RedisStore } = require('rate-limit-redis');
+const mongoSanitize = require('express-mongo-sanitize');
 const morgan = require('morgan');
 const hpp = require('hpp');
 
@@ -58,6 +60,7 @@ app.use(cors({
 // 4. DATA SANITIZATION
 app.use(express.json({ limit: '10kb' })); // Limit body size
 app.use(express.urlencoded({ extended: true, limit: '10kb' }));
+app.use(mongoSanitize()); // Prevent NoSQL Injection
 app.use(hpp()); 
 
 // 5. RATE LIMITING
@@ -67,11 +70,21 @@ const generalLimiter = rateLimit({
   message: { success: false, message: 'Too many requests from this IP, please try again after 15 minutes.' }
 });
 
-const loginLimiter = rateLimit({
-  windowMs: 15 * 60 * 1000,
-  max: 5,
-  message: { success: false, message: 'Too many login attempts. Try again after 15 minutes.' }
-});
+let _loginLimiter;
+const loginLimiter = async (req, res, next) => {
+  if (!_loginLimiter) {
+    if (!redisClient.isOpen) await connectRedis();
+    _loginLimiter = rateLimit({
+      store: new RedisStore({
+        sendCommand: (...args) => redisClient.sendCommand(args),
+      }),
+      windowMs: 15 * 60 * 1000,
+      max: 5,
+      message: { success: false, message: 'Too many login attempts. Try again after 15 minutes.' }
+    });
+  }
+  return _loginLimiter(req, res, next);
+};
 
 const enquiryLimiter = rateLimit({
   windowMs: 60 * 60 * 1000,
