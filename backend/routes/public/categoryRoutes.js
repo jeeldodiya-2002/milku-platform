@@ -4,7 +4,6 @@ const Category = require('../../models/CategoryModel');
 const Product = require('../../models/ProductModel');
 const { verifyToken } = require('../../middleware/auth');
 const { clearProductCache } = require('../../controllers/public/productController');
-const { getIO } = require('../../config/socket');
 
 // Resolve any legacy {en, gu} bilingual objects to flat English strings
 const resolveField = (val) => {
@@ -38,7 +37,6 @@ router.post('/', verifyToken, async (req, res) => {
     const category = new Category(req.body);
     await category.save();
     await clearProductCache();
-    getIO().emit('categories_updated');
     res.status(201).json({ success: true, data: sanitizeCategory(category) });
   } catch (err) {
     res.status(400).json({ success: false, message: err.message });
@@ -67,7 +65,6 @@ router.put('/:id', verifyToken, async (req, res) => {
     }
 
     await clearProductCache();
-    getIO().emit('categories_updated');
 
     res.json({ success: true, data: sanitizeCategory(category) });
   } catch (err) {
@@ -90,7 +87,6 @@ router.delete('/:id', verifyToken, async (req, res) => {
     
     await category.deleteOne();
     await clearProductCache();
-    getIO().emit('categories_updated');
     res.json({ success: true, message: 'Category and all associated products deleted' });
   } catch (err) {
     res.status(500).json({ success: false, message: err.message });

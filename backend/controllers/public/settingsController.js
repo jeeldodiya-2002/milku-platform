@@ -1,5 +1,4 @@
 const Settings = require('../../models/SettingsModel');
-const { getIO } = require('../../config/socket');
 
 // @desc    Get Global Settings
 // @route   GET /api/settings
@@ -52,13 +51,7 @@ const updateSettings = async (req, res) => {
       settings = await Settings.findByIdAndUpdate(settings._id, req.body, { returnDocument: 'after' });
     }
 
-    // REAL-TIME SYNC: Emit event to all clients to refresh settings
-    try {
-        const io = getIO();
-        io.emit('settings_updated', settings);
-    } catch (socketErr) {
-        console.error("Socket emission failed:", socketErr.message);
-    }
+
 
     res.status(200).json({ success: true, data: settings });
   } catch (error) {

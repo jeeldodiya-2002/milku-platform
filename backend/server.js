@@ -8,7 +8,6 @@ const compression = require('compression');
 const http = require('http');
 const connectDB = require('./config/db');
 const { connectRedis, redisClient } = require('./config/redis');
-const { initSocket } = require('./config/socket');
 const rateLimit = require('express-rate-limit');
 const { RedisStore } = require('rate-limit-redis');
 const mongoSanitize = require('express-mongo-sanitize');
@@ -177,7 +176,6 @@ const startServer = async () => {
     try {
         await connectDB();
         await connectRedis();
-        await initSocket(server);
 
         const PORT = process.env.PORT || 5000;
         
@@ -195,8 +193,7 @@ const startServer = async () => {
         server.listen(PORT, () => {
             console.log(`\n🚀 MILKU HA ENGINE ONLINE`);
             console.log(`📡 Port: ${PORT}`);
-            console.log(`🧠 Cache: Redis Active`);
-            console.log(`🔌 Real-time: Socket.io Clustered\n`);
+            console.log(`🧠 Cache: Redis Active\n`);
         });
     } catch (err) {
         console.error('❌ ENGINE START FAILURE:', err);

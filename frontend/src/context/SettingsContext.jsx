@@ -1,6 +1,5 @@
 import React, { createContext, useState, useContext, useEffect } from 'react';
 import api from '../services/api';
-import { io } from 'socket.io-client';
 
 const SettingsContext = createContext();
 
@@ -67,27 +66,6 @@ export const SettingsProvider = ({ children }) => {
   useEffect(() => {
     fetchSettings();
     fetchCategories();
-
-    // REAL-TIME SYNC: Initialize Socket.io connection
-    const socketBaseUrl = import.meta.env.VITE_API_URL 
-      ? import.meta.env.VITE_API_URL.replace('/api', '') 
-      : `${window.location.protocol}//${window.location.hostname}:5000`;
-      
-    const socket = io(socketBaseUrl);
-
-    socket.on('settings_updated', (updatedSettings) => {
-      if (import.meta.env.DEV) console.log("✨ Settings synchronized in real-time");
-      setSettings(updatedSettings);
-    });
-    
-    socket.on('categories_updated', () => {
-      if (import.meta.env.DEV) console.log("✨ Categories synchronized in real-time");
-      fetchCategories();
-    });
-
-    return () => {
-      socket.disconnect();
-    };
   }, []);
 
   const getWhatsAppLink = (message) => {
