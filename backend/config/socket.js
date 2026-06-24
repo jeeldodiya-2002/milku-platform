@@ -36,7 +36,17 @@ const initSocket = async (server) => {
 };
 
 const getIO = () => {
-    if (!io) throw new Error("Socket.io not initialized!");
+    if (!io) {
+        if (process.env.VERCEL === '1') {
+            // Return a dummy emitter on Vercel to prevent crashes
+            return {
+                emit: () => {},
+                to: () => ({ emit: () => {} }),
+                in: () => ({ emit: () => {} })
+            };
+        }
+        throw new Error("Socket.io not initialized!");
+    }
     return io;
 };
 

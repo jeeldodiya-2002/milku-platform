@@ -191,7 +191,11 @@ const startServer = async () => {
     }
 };
 
-startServer();
+if (process.env.VERCEL !== '1') {
+    startServer();
+}
+
+module.exports = app;
 
 // GRACEFUL SHUTDOWN HANDLERS
 const gracefulShutdown = () => {
