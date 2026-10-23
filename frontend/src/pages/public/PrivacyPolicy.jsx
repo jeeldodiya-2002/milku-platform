@@ -107,8 +107,9 @@ const PrivacyPolicy = ({ splashFinished }) => {
             className="relative w-full min-h-screen"
         >
             <SEO 
-                title="MILKU | Privacy Policy"
-                description="Our commitment to your privacy. Learn how Milku (Jay Gayatri Dairy) safeguards your data and business information."
+                title="MILKU | Privacy Policy — Jay Gayatri Dairy"
+                description="Our commitment to your privacy. Learn how Milku (Jay Gayatri Dairy) safeguards your personal data, order details, and business information."
+                keywords="Milku, Milku Dairy, Jay Gayatri Dairy privacy policy, milku data protection"
                 canonical="https://milkudairy.com/privacy-policy"
             />
             <PageReveal splashFinished={splashFinished}>

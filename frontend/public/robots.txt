@@ -2,4 +2,21 @@ User-agent: *
 Allow: /
 Disallow: /admin-milku-secure-9281/
 
+User-agent: Googlebot
+Allow: /
+
+User-agent: Bingbot
+Allow: /
+
+User-agent: Applebot
+Allow: /
+
+User-agent: Twitterbot
+Allow: /
+
+User-agent: facebookexternalhit
+Allow: /
+
 Sitemap: https://milkudairy.com/sitemap.xml
+Host: https://milkudairy.com
+

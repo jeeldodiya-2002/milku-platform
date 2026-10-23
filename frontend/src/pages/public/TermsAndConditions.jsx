@@ -107,8 +107,9 @@ const TermsAndConditions = ({ splashFinished }) => {
             className="relative w-full min-h-screen"
         >
             <SEO 
-                title="MILKU | Terms & Condition"
-                description="The legal terms governing your use of the Milku platform. Provided by Jay Gayatri Dairy Products."
+                title="MILKU | Terms & Conditions — Jay Gayatri Dairy"
+                description="The terms and conditions governing orders, deliveries, and wholesale milk products on the Milku platform by Jay Gayatri Dairy Products."
+                keywords="Milku, Milku Dairy, Jay Gayatri Dairy terms, milku ordering terms"
                 canonical="https://milkudairy.com/terms-conditions"
             />
             <PageReveal splashFinished={splashFinished}>

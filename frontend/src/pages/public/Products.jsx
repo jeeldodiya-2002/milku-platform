@@ -824,9 +824,9 @@ const Products = ({ splashFinished }) => {
   return (
     <motion.div className="selection:bg-milku-primary selection:text-white">
       <SEO
-        title="MILKU | Jay Gayatri Dairy Products"
-        description="Explore our FSSAI certified dairy range. From hand-churned Bilona Ghee to creamy Malai Paneer and probiotic Dahi. Premium quality for families and B2B partners in Surat."
-        keywords="fresh paneer surat, A2 ghee gujarat, malai paneer wholesale, buffalo ghee gujarat, shrikhand surat, basundi supplier gujarat, dairy products mehsana gujarat, A2 desi cow ghee supplier"
+        title="MILKU Products | Jay Gayatri Dairy — Fresh Paneer, A2 Ghee, Chaas, Curd & Sweets"
+        description="Explore the complete Milku dairy product range by Jay Gayatri Dairy. From hand-churned Bilona A2 Desi Cow Ghee and fresh Malai Paneer to probiotic Dahi (Curd), Buttermilk (Chaas), Shrikhand, Basundi, Penda, Barfi, Mava, and Mithai in Surat and Gujarat."
+        keywords="Milku, Milku Dairy, Milku Products, mil prpducts, milku prpducts, milku milk products, Jay Gayatri Dairy, Jay Gayatri Dairy Products, pure milk products, dairy products, fresh paneer surat, malai paneer, medium fat paneer, low fat paneer, cottage cheese, A2 ghee gujarat, A2 desi cow ghee, bilona ghee, buffalo ghee gujarat, fresh curd, thick dahi surat, probiotic dahi, fresh buttermilk, masala chaas surat, shrikhand surat, matho, rajbhog shrikhand, lassi, kesar dry fruit lassi, basundi supplier gujarat, sitafal basundi, penda, thabdi penda, barfi, kalakand, halwa, live halwa, mava khoya, molo mavo, sweet mava, kaju katli, kaju katri, mohanthal, milk cake, dairy products mehsana gujarat, wholesale dairy products surat, buy dairy products online surat"
         canonical="https://milkudairy.com/products"
       />
       <PageReveal splashFinished={splashFinished}>

@@ -18,6 +18,7 @@ import { Helmet } from 'react-helmet-async';
 import axios from 'axios';
 import Navbar from '../../components/Navbar';
 import Footer from '../../components/Footer';
+import SEO from '../../components/SEO';
 
 const RatingBar = ({ rating, count, total, delay = 0 }) => {
     const percentage = total > 0 ? (count / total) * 100 : 0;
@@ -173,10 +174,12 @@ const Reviews = () => {
 
     return (
         <div className="min-h-screen bg-slate-50 font-outfit overflow-x-hidden">
-            <Helmet>
-                <title>Customer Voices | Milku Dairy Products</title>
-                <meta name="description" content="Read authentic reviews from our community. Real people, real experiences with Milku dairy products." />
-            </Helmet>
+            <SEO 
+                title="MILKU Reviews | Real Customer Feedback — Jay Gayatri Dairy"
+                description="Read authentic customer reviews and ratings for Milku milk products and Jay Gayatri Dairy. Real experiences from families and restaurants across Surat and Gujarat."
+                keywords="Milku, Milku Dairy, milku products, milku reviews, customer feedback milku dairy, jay gayatri dairy reviews, pure paneer review surat, A2 cow ghee ratings gujarat"
+                canonical="https://milkudairy.com/reviews"
+            />
 
             <Navbar />
 

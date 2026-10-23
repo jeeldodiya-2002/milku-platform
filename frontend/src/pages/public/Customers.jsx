@@ -160,9 +160,9 @@ const Customers = ({ splashFinished }) => {
     return (
         <motion.div ref={containerRef} style={{ backgroundColor: dynamicBackground }} className="relative min-h-screen overflow-hidden">
             <SEO 
-                title="MILKU | Trusted Customers"
-                description={`Explore the elite network of ${customers.length > 0 ? `${customers.length}+` : 'top'} restaurants and hotels that trust Milku for premium dairy excellence. Our partners include leading establishments across ${unique_areas.slice(0, 5).join(', ')} and beyond.`}
-                keywords={`trusted customers milku, dairy partners surat, restaurant supply gujarat, hotel dairy vendor surat, milku dairy network, ${customers.slice(0, 15).map(c => c.name).join(', ')}`}
+                title="MILKU | Trusted Restaurant & Hotel Partners — Jay Gayatri Dairy"
+                description={`Explore the elite network of ${customers.length > 0 ? `${customers.length}+` : 'top'} restaurants and hotels that trust Milku (Jay Gayatri Dairy) for pure milk and dairy products across Surat and Gujarat.`}
+                keywords={`Milku, Milku Dairy, milku products, Jay Gayatri Dairy, trusted customers milku, dairy partners surat, restaurant supply gujarat, hotel dairy vendor surat, milku dairy network, ${customers.slice(0, 15).map(c => c.name).join(', ')}`}
                 canonical="https://milkudairy.com/trusted-by"
             />
             <PageReveal splashFinished={splashFinished}>

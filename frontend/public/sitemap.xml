@@ -1,57 +1,134 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">
+<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9"
+        xmlns:image="http://www.google.com/schemas/sitemap-image/1.1">
   <url>
     <loc>https://milkudairy.com/</loc>
-    <lastmod>2026-05-07</lastmod>
-    <changefreq>monthly</changefreq>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>daily</changefreq>
     <priority>1.0</priority>
+    <image:image>
+      <image:loc>https://milkudairy.com/logo.jpeg</image:loc>
+      <image:title>Milku — Jay Gayatri Dairy Products Surat</image:title>
+      <image:caption>Pure Malai Paneer, A2 Desi Cow Bilona Ghee, Chaas, Curd &amp; Sweets</image:caption>
+    </image:image>
   </url>
   <url>
     <loc>https://milkudairy.com/products</loc>
-    <lastmod>2026-05-07</lastmod>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>daily</changefreq>
+    <priority>0.95</priority>
+    <image:image>
+      <image:loc>https://milkudairy.com/logo.jpeg</image:loc>
+      <image:title>Milku Complete Dairy Catalog</image:title>
+      <image:caption>100% Pure Milk &amp; Dairy Products by Jay Gayatri Dairy</image:caption>
+    </image:image>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=paneer</loc>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.9</priority>
   </url>
   <url>
+    <loc>https://milkudairy.com/products?category=ghee</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.9</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=buttermilk-chass</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=curd-dahi</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=shrikhand</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=lassi</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=basundi</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=penda</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=barfi</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=mava</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/products?category=special-items</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.85</priority>
+  </url>
+  <url>
     <loc>https://milkudairy.com/about</loc>
-    <lastmod>2026-05-07</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://milkudairy.com/trusted-by</loc>
-    <lastmod>2026-05-07</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
     <priority>0.8</priority>
   </url>
   <url>
     <loc>https://milkudairy.com/contact</loc>
-    <lastmod>2026-05-07</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
   </url>
   <url>
     <loc>https://milkudairy.com/bulk-order</loc>
-    <lastmod>2026-05-07</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>monthly</changefreq>
-    <priority>0.8</priority>
+    <priority>0.85</priority>
+  </url>
+  <url>
+    <loc>https://milkudairy.com/reviews</loc>
+    <lastmod>2026-10-23</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.75</priority>
   </url>
   <url>
     <loc>https://milkudairy.com/terms-conditions</loc>
-    <lastmod>2026-05-07</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
   </url>
   <url>
     <loc>https://milkudairy.com/privacy-policy</loc>
-    <lastmod>2026-05-07</lastmod>
+    <lastmod>2026-10-23</lastmod>
     <changefreq>yearly</changefreq>
     <priority>0.3</priority>
-  </url>
-  <url>
-    <loc>https://milkudairy.com/reviews</loc>
-    <lastmod>2026-05-07</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.7</priority>
   </url>
 </urlset>

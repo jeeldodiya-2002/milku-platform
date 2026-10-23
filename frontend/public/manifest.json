@@ -1,7 +1,7 @@
 {
-  "name": "Milku — Jay Gayatri Dairy",
-  "short_name": "Milku",
-  "description": "Premium dairy products from Jay Gayatri Dairy — fresh paneer, A2 ghee, chaas and dahi delivered fresh in Surat and Gujarat",
+  "name": "Milku — Jay Gayatri Dairy | Pure Milk & Dairy Products",
+  "short_name": "Milku Dairy",
+  "description": "Milku by Jay Gayatri Dairy delivers 100% pure milk products in Surat and Gujarat. Fresh Malai Paneer, traditional Bilona A2 Desi Cow Ghee, Buffalo Ghee, Curd (Dahi), Buttermilk (Chaas), Shrikhand, Lassi, Basundi, Penda, Barfi, Mava & Indian sweets.",
   "start_url": "/",
   "scope": "/",
   "display": "standalone",

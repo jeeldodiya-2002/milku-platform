@@ -145,9 +145,9 @@ const Contact = ({ splashFinished }) => {
             className="relative min-h-screen selection:bg-milku-primary selection:text-white overflow-hidden transition-colors duration-200"
         >
             <SEO 
-                title="MILKU | Contact Us"
-                description="Connect with Jay Gayatri Dairy Products. Visit our Surat headquarters, call our support team, or WhatsApp us for bulk enquiries and fresh dairy delivery details."
-                keywords="contact milku dairy, dairy surat location, dairy phone number surat, whatsapp dairy order, jay gayatri dairy address, dairy directions surat, dairy mehsana"
+                title="MILKU | Contact Jay Gayatri Dairy Surat & Sunak (Mehsana) Branches"
+                description="Connect with Milku (Jay Gayatri Dairy Products). Visit our Surat headquarters or Sunak (Unjha, Mehsana) main branch, call 8128164251, or WhatsApp 918347711123 for fresh milk products, pure paneer, ghee, and wholesale deliveries."
+                keywords="Milku, Milku Dairy, milku products, Jay Gayatri Dairy, contact milku dairy, dairy surat location, dairy phone number surat, whatsapp dairy order, jay gayatri dairy address surat, dairy directions surat, sunak dairy unjha, dairy mehsana, milk supplier contact surat, dairy near me"
                 canonical="https://milkudairy.com/contact"
             />
             <PageReveal splashFinished={splashFinished}>

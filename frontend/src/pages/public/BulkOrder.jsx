@@ -241,9 +241,9 @@ const BulkOrder = ({ splashFinished }) => {
             </div>
 
             <SEO 
-                title="MILKU | Partner Program"
-                description="Milku is Gujarat's trusted B2B dairy supplier. We provide wholesale Paneer, Ghee, and Dahi to top restaurants and hotels with zero-lag daily delivery across Surat."
-                keywords="B2B dairy supplier gujarat, restaurant dairy supply surat, bulk paneer supplier gujarat, sweet shop supplier surat, dairy wholesale gujarat, wholesale dahi, fresh paneer delivery surat"
+                title="MILKU | Wholesale Milk Products & B2B Dairy Supply — Jay Gayatri Dairy"
+                description="Milku (Jay Gayatri Dairy) is Gujarat's trusted wholesale B2B milk and dairy supplier. We provide bulk Paneer, Ghee, Dahi, and Mava to top restaurants, hotels, and caterers with daily delivery across Surat."
+                keywords="Milku, Milku Dairy, milku products, B2B dairy supplier gujarat, wholesale milk products surat, restaurant dairy supply surat, bulk paneer supplier gujarat, sweet shop supplier surat, dairy wholesale gujarat, wholesale dahi, bulk ghee supplier surat, fresh paneer delivery surat"
                 canonical="https://milkudairy.com/bulk-order"
             />
             <CinematicEnvironment chapter={3} />

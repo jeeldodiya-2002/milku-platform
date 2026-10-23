@@ -74,9 +74,9 @@ const About = ({ splashFinished }) => {
     return (
         <motion.div ref={containerRef} style={{ backgroundColor: dynamicBackground }} className="relative min-h-screen overflow-hidden selection:bg-milku-primary selection:text-white transition-colors duration-200">
             <SEO 
-                title="MILKU | Our Legacy"
-                description="With a legacy of 30 years, Jay Gayatri Dairy honors the soul of purity. Discover our history of traditional Bilona churning and ethical farming in Mehsana, Gujarat."
-                keywords="jay gayatri dairy, bilona ghee unjha, dairy mehsana, dairy heritage gujarat, ethical farming gujarat, pure dairy history, legacy dairy brand"
+                title="MILKU | About Jay Gayatri Dairy — 30+ Years of Pure Milk Heritage"
+                description="With a proud legacy of 30+ years, Jay Gayatri Dairy (Milku) honors the soul of milk purity. Discover our history of traditional Bilona churning, ethical dairy farming, and fresh delivery across Surat, Mehsana, and Gujarat."
+                keywords="Milku, Milku Dairy, milku products, Jay Gayatri Dairy, Jay Gayatri Dairy Products, Jay Gayatri Milk, about milku, milku history, dairy heritage gujarat, bilona ghee unjha, dairy mehsana, sunak dairy, unjha dairy, surat dairy, pure dairy history, legacy dairy brand, ethical milk farming gujarat"
                 canonical="https://milkudairy.com/about"
             />
             <PageReveal splashFinished={splashFinished}>

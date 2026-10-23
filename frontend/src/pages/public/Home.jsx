@@ -294,9 +294,9 @@ const Home = ({ splashFinished }) => {
     return (
         <motion.div ref={containerRef} style={{ backgroundColor: dynamicBackground }} id="home-container" className="relative w-full overflow-x-hidden selection:bg-milku-primary selection:text-white">
             <SEO
-                title="MILKU | Jay Gayatri Dairy"
-                description="Jay Gayatri Dairy presents Milku: Surat's premier dairy brand. Delivering pure A2 Ghee, fresh Malai Paneer, Dahi, and Chaas from farm to table. Quality since 30 years."
-                keywords="dairy products surat, jay gayatri dairy, milku dairy, fresh paneer surat, A2 ghee gujarat, fresh dahi surat, chaas buttermilk, premium dairy gujarat, FSSAI certified dairy surat"
+                title="MILKU | Jay Gayatri Dairy — Pure Milk Products, Paneer, Desi Ghee, Chaas & Sweets"
+                description="Jay Gayatri Dairy presents Milku: Surat and Gujarat's premier dairy brand. Delivering 100% pure A2 Cow Ghee, fresh Malai Paneer, Dahi, Chaas, Shrikhand, Basundi, Penda, and traditional Indian sweets from farm to table. 30+ years of dairy purity."
+                keywords="Milku, Milku Dairy, Milku Products, mil prpducts, milku prpducts, milku milk products, milkudairy, milkudairy.com, Jay Gayatri Dairy, Jay Gayatri Dairy Products, Jay Gayatri Milk, Milku Jay Gayatri, milk products, mil products, dairy products, pure milk products, dairy farm, dairy store, dairy near me, dairy shop near me, Surat Dairy, Gujarat Dairy, Mehsana Dairy, Sunak Dairy, Unjha Dairy, Pure Paneer, Malai Paneer, Medium Fat Paneer, Low Fat Soft Paneer, Low Fat Hard Paneer, Fresh Paneer Surat, Paneer supplier Surat, Ghee, A2 Desi Cow Ghee, A2 Ghee, Bilona Ghee, Desi Cow Ghee, Pure Cow Ghee, Buffalo Ghee, Desi Ghee Gujarat, Curd, Dahi, Fresh Curd, Thick Curd, Creamy Curd, Buttermilk, Chaas, Chass, Fresh Buttermilk, Masala Chaas, Shrikhand, Matho, Rajbhog Shrikhand, Mango Shrikhand, Lassi, Kesar Lassi, Basundi, Penda, Peda, Thabdi Penda, Barfi, Halwa, Mava, Khoya, Molo Mavo, Kaju Katli, Kaju Katri, Mohanthal, Milk Cake, wholesale dairy supplier Surat, b2b dairy supplier Gujarat, FSSAI certified dairy surat"
                 canonical="https://milkudairy.com/"
             />
             <PageReveal splashFinished={splashFinished}>
