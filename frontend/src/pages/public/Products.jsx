@@ -824,9 +824,9 @@ const Products = ({ splashFinished }) => {
   return (
     <motion.div className="selection:bg-milku-primary selection:text-white">
       <SEO
-        title="MILKU Products | Jay Gayatri Dairy — Fresh Paneer, A2 Ghee, Chaas, Curd & Sweets"
-        description="Explore the complete Milku dairy product range by Jay Gayatri Dairy. From hand-churned Bilona A2 Desi Cow Ghee and fresh Malai Paneer to probiotic Dahi (Curd), Buttermilk (Chaas), Shrikhand, Basundi, Penda, Barfi, Mava, and Mithai in Surat and Gujarat."
-        keywords="Milku, Milku Dairy, Milku Products, mil prpducts, milku prpducts, milku milk products, Jay Gayatri Dairy, Jay Gayatri Dairy Products, pure milk products, dairy products, fresh paneer surat, malai paneer, medium fat paneer, low fat paneer, cottage cheese, A2 ghee gujarat, A2 desi cow ghee, bilona ghee, buffalo ghee gujarat, fresh curd, thick dahi surat, probiotic dahi, fresh buttermilk, masala chaas surat, shrikhand surat, matho, rajbhog shrikhand, lassi, kesar dry fruit lassi, basundi supplier gujarat, sitafal basundi, penda, thabdi penda, barfi, kalakand, halwa, live halwa, mava khoya, molo mavo, sweet mava, kaju katli, kaju katri, mohanthal, milk cake, dairy products mehsana gujarat, wholesale dairy products surat, buy dairy products online surat"
+        title="Dairy Products Surat | Milku Pure Milk Products Catalog — Jay Gayatri Dairy"
+        description="Explore the pure milk & dairy products catalog in Surat by Milku (Jay Gayatri Dairy). Fresh Malai Paneer, Bilona A2 Desi Cow Ghee, Buffalo Ghee, Curd (Dahi), Buttermilk (Chaas), Shrikhand, Basundi, Penda & Sweets in Surat and Gujarat."
+        keywords="dairy products surat, milk products surat, dairy products, milk products, buy dairy products online surat, fresh paneer surat, pure milk products, pure dairy products, Milku, Milku Dairy, Milku Products, Jay Gayatri Dairy, Jay Gayatri Dairy Products, A2 ghee gujarat, A2 desi cow ghee, bilona ghee, buffalo ghee gujarat, fresh curd, thick dahi surat, probiotic dahi, fresh buttermilk, masala chaas surat, shrikhand surat, matho, rajbhog shrikhand, lassi, basundi supplier gujarat, penda, thabdi penda, barfi, mava khoya, kaju katli, wholesale dairy products surat"
         canonical="https://milkudairy.com/products"
       />
       <PageReveal splashFinished={splashFinished}>

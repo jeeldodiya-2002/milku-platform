@@ -6,6 +6,16 @@ import { Helmet } from 'react-helmet-async';
  * Covers brand queries, common misspellings (e.g. mil prpducts), categories, and location variants.
  */
 const BASE_KEYWORDS = [
+    "dairy products surat",
+    "milk products surat",
+    "dairy products",
+    "milk products",
+    "dairy products in surat",
+    "milk products in surat",
+    "pure dairy products",
+    "dairy near me",
+    "dairy shop near me",
+    "best dairy products in surat",
     "Milku",
     "Milku Dairy",
     "Milku Products",
@@ -18,13 +28,9 @@ const BASE_KEYWORDS = [
     "Jay Gayatri Dairy Products",
     "Jay Gayatri Milk",
     "Milku Jay Gayatri",
-    "milk products",
-    "dairy products",
     "pure milk products",
     "dairy farm",
     "dairy store",
-    "dairy near me",
-    "dairy shop near me",
     "Surat Dairy",
     "Gujarat Dairy",
     "Sunak Dairy",
@@ -68,7 +74,7 @@ const SEO = ({
 }) => {
     const siteName = "Milku® — Jay Gayatri Dairy";
     const author = "Jay Gayatri Dairy Products";
-    const defaultTitle = "Milku — Jay Gayatri Dairy | Pure Milk & Dairy Products";
+    const defaultTitle = "Milku Dairy — Pure Milk & Dairy Products Surat | Jay Gayatri Dairy";
     const defaultDescription = "Milku by Jay Gayatri Dairy delivers 100% pure milk and dairy products in Surat and Gujarat. Fresh Malai Paneer, traditional Bilona A2 Desi Cow Ghee, Buffalo Ghee, thick Dahi (Curd), refreshing Chaas (Buttermilk), Shrikhand, Lassi, Basundi, Penda, Barfi, Mava & traditional Indian sweets.";
 
     // Fallback logic for various props

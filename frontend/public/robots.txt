@@ -18,5 +18,3 @@ User-agent: facebookexternalhit
 Allow: /
 
 Sitemap: https://milkudairy.com/sitemap.xml
-Host: https://milkudairy.com
-
